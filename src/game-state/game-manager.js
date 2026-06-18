@@ -14,18 +14,11 @@ class GameManager {
     }
 
     playGame() {
-        // while (!(this.state instanceof HumanState)) {
-        //     // Transition through state whilst a human interaction is not needed
-        //     this.setState(this.state.doAction());
-        // }
+        // Implement when done
     }
 
     playGameDev() {
-        // try {
-            this.setState(this.state.doAction());
-        // } catch (error) {
-        //     console.log("Caught error: " + error);
-        // }
+        this.setState(this.state.doAction());
     }
 }
 

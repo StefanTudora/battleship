@@ -1,4 +1,3 @@
-
 /*
  * Meant to be extended
  */ 
@@ -8,8 +7,13 @@ class State {
         this.context = context;
     }
 
+    /** Meant to be overwritten */
     doAction() {
-        /** Intentionally left empty */
+        try {
+            throw new Error('Executed undefined action');
+        } catch (error) {
+            console.log(error.message);
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import { GameBoard } from './gameboard.js';
+import { BoardProxy } from "./board-proxy.js";
 
 class Player {
 
@@ -6,12 +6,18 @@ class Player {
         this.board = board;
     }
 
-    hasLost() {
-        return board.allShipsSunk();
+    hasWon() {
+        // console.log(this.board.prettyPrintBoard());
+        return this.board.allShipsSunk();
     }
 
-    getBoard() {
-        return this.board;
+    /** Meant to be overwritten */
+    attackBoard() {
+        // Intentionally left empty
+    }
+
+    printBoard() {
+        this.board.prettyPrintBoard();
     }
 }
 

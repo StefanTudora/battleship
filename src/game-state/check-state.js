@@ -1,4 +1,5 @@
-import { HumanState } from './human-state.js'
+import { PlayerState } from './player-state.js'
+import { FinalState } from './final-state.js'
 import { State } from './base-state.js';
 
 class CheckState extends State {
@@ -8,7 +9,13 @@ class CheckState extends State {
     }
 
     doAction() {
-        return new HumanState(this.context);
+        // Check if we have a winner and terminate game
+        if (this.context.getActivePlayer().hasWon()) {
+            return new FinalState(this.context);
+        }
+        // Switch control and keep playing
+        this.context.switchControl();
+        return new PlayerState(this.context);
     }
 }
 

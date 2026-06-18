@@ -1,5 +1,10 @@
 import { Ship } from './ship.js'
 
+/*
+ * Class representing the game board with precise ship placements information.
+ * Each player will hold a referrence to the  enemy board but made visible only throuh a proxy.
+ * As such, the players will be able to see only the hits or misses of enemy board.
+ */
 class GameBoard {
 
     /* Hidden board which details the ship placement */
@@ -11,10 +16,13 @@ class GameBoard {
 
     constructor() {
         /* Main board which opposing players can view, contains Hits and Misses */
-        this.board          = GameBoard.initBoard(10, 10);
         this.#shipPlacement = GameBoard.initBoard(10, 10);
         this.#shipCnt       = 0;
         this.#shipRegistry  = new Map();
+    }
+
+    getBoardSize() {
+        return [this.#shipPlacement.length, this.#shipPlacement[0].length];
     }
 
     static initBoard(rows, cols) {
@@ -33,7 +41,7 @@ class GameBoard {
      */
     addShipToBoard(start, direction, length) {
         // add ship to registry
-        this.#shipRegistry[++this.#shipCnt] = new Ship(length);
+        this.#shipRegistry.set(++this.#shipCnt, new Ship(length));
         const adv = (point, direction) => {
             if (direction) {
                 return [point[0] + 1, point[1]];
@@ -48,38 +56,23 @@ class GameBoard {
     }
 
     /*
-     * Attack the current point. If ship is located at point, mark hit, else mark miss.
-     * @point - to attack
-     */
-    receiveAttack(point) {
-        const pointState = this.#attackPoint(point);
-        switch(pointState) {
-            case "Hit":
-                this.board[point[0]][point[1]] = 'H';
-                break;
-            case "Miss":
-                this.board[point[0]][point[1]] = 'M';
-                break;
-        }
-        return pointState;
-    }
-
-    /*
-     * Process what is found at the current location
+     * Process the shot
      * @point - to process
      */
-    #attackPoint(point) {
+    receiveAttack(point) {
+        // Augemnt the method to let the player know the ship was sunk;
         if (this.#shipPlacement[point[0]][point[1]] == 0) {
             return "Miss";
         }
-        // get ship by the cell value
         const currentShip = this.#getShipFromRegistryByCoord(point);
         currentShip.hit();
         if (currentShip.isSunk()) {
             // remove from the shipRegistry
-            this.#shipRegistry.delete(this.#shipPlacement[point[1]][point[0]]);
+            this.#shipRegistry.delete(this.#shipPlacement[point[0]][point[1]]);
         }
         this.#shipPlacement[point[0]][point[1]] = 0;
+        // console.log("Ship battalion active unit status : " + this.#shipRegistry.size);
+        // this.#prettyPrintBoard();
         return "Hit";
     }
 
@@ -87,7 +80,7 @@ class GameBoard {
      * Remove sunk ship from registry
      */
     #getShipFromRegistryByCoord(point) {
-        return this.#shipRegistry[this.#shipPlacement[point[0]][point[1]]];
+        return this.#shipRegistry.get(this.#shipPlacement[point[0]][point[1]]);
     }
 
     /*
@@ -100,27 +93,14 @@ class GameBoard {
     /*
      * Pretty display of the board
      */
-    prettyPrintBoard() {
+    #prettyPrintBoard() {
         console.log('\n   ' + Array.from({length: this.#shipPlacement[0].length}, (_, i) => i).join(' '));
         console.log('  ' + Array.from({length: 2 * this.#shipPlacement[0].length}, () => '─').join('') + '─');
         for (let idx = 0; idx < this.#shipPlacement.length; idx++) {
-            console.log(idx + ' │' + this.#shipPlacement[idx].map(cell => cell === 0 ? '~' : 'S').join(' ') + '│');
+            console.log(idx + ' │' + this.#shipPlacement[idx].map(cell => cell === 0 ? '~' : cell).join(' ') + '│');
         }
         console.log('  ' + Array.from({length: 2 * this.#shipPlacement[0].length}, () => '─').join('') + '─\n');
     }
-
-    /*
-     * Pretty display of the public board (shows Hits, Misses, and empty cells)
-     */
-    prettyPrintPublicBoard() {
-        console.log('\n   ' + Array.from({length: this.board[0].length}, (_, i) => i).join(' '));
-        console.log('  ' + Array.from({length: 2 * this.board[0].length}, () => '─').join('') + '─');
-        for (let idx = 0; idx < this.board.length; idx++) {
-            console.log(idx + ' │' + this.board[idx].map(cell => cell === 0 ? '~' : cell).join(' ') + '│');
-        }
-        console.log('  ' + Array.from({length: 2 * this.board[0].length}, () => '─').join('') + '─\n');
-    }
-
 }
 
 export { GameBoard };

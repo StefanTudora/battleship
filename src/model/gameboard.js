@@ -29,10 +29,6 @@ class GameBoard {
         return Array.from({ length: rows }, () => Array(cols).fill(0));
     }
 
-    getStateOfPoint(point) {
-        return this.board[point[0]][point[1]];
-    }
-
     /*
      * Add the ship to board
      * @start     - starting point in which the ship is anchored

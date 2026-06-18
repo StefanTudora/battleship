@@ -26,13 +26,18 @@ class NaiveStrategy extends BaseStrategy {
         }
     }
 
-    /*
-     * Pop from the randomly shuffled array the last entry and return for attack
-     */
+    
     getBestPointToAttack() {
         const point = this.coordinates.pop();
         // console.log("Plan to attack " + point);
         return point;
+    }
+
+    /*
+     * Pop from the randomly shuffled array the last entry and return for attack
+     */
+    executeStrategy() {
+        this.observableBoard.receiveAttack(this.coordinates.pop());
     }
 }
 

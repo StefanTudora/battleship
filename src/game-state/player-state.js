@@ -12,7 +12,7 @@ class PlayerState extends State {
         const activePlayer = this.context.getActivePlayer();
 
         if (activePlayer instanceof CPUPlayer) {
-            activePlayer.attackBoard();    
+            activePlayer.attackBoard();
         } else {
             // Break the FSM execution and wait for a human player to resume the game;
             return undefined;

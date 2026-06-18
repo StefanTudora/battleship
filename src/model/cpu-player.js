@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { BaseStrategy } from "../cpu-strategy/base-strategy.js";
 import { NaiveStrategy } from "../cpu-strategy/naive-strategy.js";
+import { GunnerStrategy } from "../cpu-strategy/gunner-strategy.js";
 
 class CPUPlayer extends Player {
     
@@ -23,6 +24,9 @@ class CPUPlayer extends Player {
                 /** Rewrite the code to allow for a dynamic import of the strategy to take place */
                 this.strategy = new NaiveStrategy(gameBoard);
                 break;
+            case "Gunner":
+                this.strategy = new GunnerStrategy(gameBoard);
+                break;
             default: {
                 this.strategy = new BaseStrategy(gameBoard);
                 break;
@@ -30,13 +34,8 @@ class CPUPlayer extends Player {
         }
     }
 
-    getBestPointToAttack() {
-        return this.strategy.getBestPointToAttack();
-    }
-
     attackBoard() {
-        this.printBoard();
-        this.board.receiveAttack(this.getBestPointToAttack());
+        this.strategy.executeStrategy();
     }
 }
 

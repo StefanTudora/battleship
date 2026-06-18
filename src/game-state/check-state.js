@@ -11,8 +11,10 @@ class CheckState extends State {
     doAction() {
         // Check if we have a winner and terminate game
         if (this.context.getActivePlayer().hasWon()) {
+            this.context.getActivePlayer().printBoard();
             return new FinalState(this.context);
         }
+        
         // Switch control and keep playing
         this.context.switchControl();
         return new PlayerState(this.context);

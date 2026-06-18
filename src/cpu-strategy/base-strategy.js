@@ -9,16 +9,17 @@ class BaseStrategy {
     constructor(observableBoard) {
         this.observableBoard = observableBoard;
         const size           = observableBoard.getBoardSize();
-        this.rowSize         = size[0];
-        this.colSize         = size[1];
+        this.rows            = size[0];
+        this.cols            = size[1];
     }
 
     /*
-     * Inneficient base implementation, prone to missfire
+     * Inefficient base implementation, prone to missfire
      * Meant to be overriden
      */
-    getBestPointToAttack() {
-        return [x = Math.floor(Math.random() * rowSize), y = Math.floor(Math.random() * colSize)];
+    executeStrategy() {
+        const point = [x = Math.floor(Math.random() * rowSize), y = Math.floor(Math.random() * colSize)];
+        this.observableBoard.receiveAttack(point);
     }
 }
 

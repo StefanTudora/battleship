@@ -31,9 +31,9 @@ class GameBoard {
 
     /*
      * Add the ship to board
-     * @start     - starting point in which the ship is anchored
-     * @direction - denotes the axes along which the ships is placed (Ox or Oy)
-     * @length    - length of the ship
+     * @param {start}     - starting point in which the ship is anchored
+     * @param {direction} - denotes the axes along which the ships is placed (Ox or Oy)
+     * @param {length}    - length of the ship
      */
     addShipToBoard(start, direction, length) {
         // add ship to registry
@@ -53,7 +53,7 @@ class GameBoard {
 
     /*
      * Process the shot
-     * @point - to process
+     * @param {point} - to process
      */
     receiveAttack(point) {
         // Augemnt the method to let the player know the ship was sunk;
@@ -80,7 +80,7 @@ class GameBoard {
     }
 
     /*
-     * Return @true if no ship in registry, @false otherwise
+     * @return {true} if no ship in registry, {false} otherwise
      */
     allShipsSunk() {
         return this.#shipRegistry.size == 0;

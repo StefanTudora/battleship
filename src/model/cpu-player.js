@@ -2,6 +2,8 @@ import { Player } from "./player.js";
 import { BaseStrategy } from "../cpu-strategy/base-strategy.js";
 import { NaiveStrategy } from "../cpu-strategy/naive-strategy.js";
 import { GunnerStrategy } from "../cpu-strategy/gunner-strategy.js";
+import { CalibratedGunnerStrategy } from "../cpu-strategy/calibrated-gunner-strategy.js";
+import { SeasonedGunner } from "../cpu-strategy/seasoned-gunner.js";
 
 class CPUPlayer extends Player {
     
@@ -27,10 +29,15 @@ class CPUPlayer extends Player {
             case "Gunner":
                 this.strategy = new GunnerStrategy(gameBoard);
                 break;
-            default: {
+            case "Calibrated-Gunner":
+                this.strategy = new CalibratedGunnerStrategy(gameBoard);
+                break;
+            case "Seasoned-Gunner":
+                this.strategy = new SeasonedGunner(gameBoard);
+                break;
+            default: 
                 this.strategy = new BaseStrategy(gameBoard);
                 break;
-            }
         }
     }
 

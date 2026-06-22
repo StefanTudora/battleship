@@ -18,7 +18,7 @@ class BaseStrategy {
      * Meant to be overriden
      */
     executeStrategy() {
-        const point = [x = Math.floor(Math.random() * rowSize), y = Math.floor(Math.random() * colSize)];
+        const point = [Math.floor(Math.random() * this.rows), Math.floor(Math.random() * this.cols)];
         this.observableBoard.receiveAttack(point);
     }
 }

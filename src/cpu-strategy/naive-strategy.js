@@ -5,16 +5,12 @@ import { BaseStrategy } from './base-strategy.js'
  * Has no concept of the board state, randomly attacks cells
  */
 class NaiveStrategy extends BaseStrategy {
-    
+
     constructor(observableBoard) {
         super(observableBoard);
         this.coordinates = new Array();
         // Create array containing all coordinates found on board
-        for (let row = 0; row < 10; ++row) {
-            for (let col = 0; col < 10; ++col) {
-                this.coordinates.push([row, col]);
-            }
-        }
+        this.initPoints();
         // Use Fisher-Yates to sort the points
         for (let idx = this.coordinates.length - 1; idx >= 0; --idx) {
             const swapIdx = Math.floor(Math.random() * (idx + 1));
@@ -26,7 +22,15 @@ class NaiveStrategy extends BaseStrategy {
         }
     }
 
-    
+    initPoints() {
+        for (let row = 0; row < 10; ++row) {
+            for (let col = 0; col < 10; ++col) {
+                this.coordinates.push([row, col]);
+            }
+        }
+    }
+
+
     getBestPointToAttack() {
         const point = this.coordinates.pop();
         // console.log("Plan to attack " + point);

@@ -7,7 +7,6 @@ class Player {
     }
 
     hasWon() {
-        // console.log(this.board.prettyPrintBoard());
         return this.board.allShipsSunk();
     }
 

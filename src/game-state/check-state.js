@@ -14,7 +14,6 @@ class CheckState extends State {
             this.context.getActivePlayer().printBoard();
             return new FinalState(this.context);
         }
-        
         // Switch control and keep playing
         this.context.switchControl();
         return new PlayerState(this.context);

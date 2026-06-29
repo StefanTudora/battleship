@@ -21,10 +21,17 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
-    "babel-jest": "^30.4.1"
+    "@fontsource/orbitron": "^5.2.8",
+    "babel-jest": "^30.4.1",
+    "css-loader": "^7.1.4",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.7",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.108.0",
+    "webpack-cli": "^7.0.3",
+    "webpack-dev-server": "^5.2.5"
   },
   "dependencies": {
-    "html-loader": "^5.1.0",
     "jest": "^30.4.2"
   }
 }

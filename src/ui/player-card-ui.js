@@ -1,64 +1,88 @@
+import humanImage from '../assets/human.jpg';
+import './player-card-style.css';
 
-function PlayerCardCreate() {
-    return {
-        // Determine corect arguments for creating the card
-        // Make sure the file presents its own style sheet
-        // Use dynamic imports, and cache the images for easier use 
+const createPlayerCardUI = () => {
+    // TODO -> Use dynamic imports, and cache the images for easier use
 
-        getFullDisplayCard(/* Do we need extra arguments ?*/) {
-            const displayCard = document.createElement('div');
-            displayCard.appendChild(getPlayerTypeSelection());
-            displayCard.appendChild(getCharDisplay());
-            displayCard.appendChild(getDifficultySelectionDiv());
-            return displayCard;
-        },
+    const getFullDisplayCard = (placement) => {
+        const displayCard = document.createElement('div');
+        displayCard.classList.add("player-pres");
+        switch (placement) {
+            case "LEFT":
+                displayCard.classList.add("left-extend");
+                break;
+            case "RIGHT":
+                displayCard.classList.add("right-extend");
+                break;
+        }
+        displayCard.appendChild(getPlayerTypeSelection(displayCard));
+        displayCard.appendChild(getCharDisplay());
+        displayCard.appendChild(getDifficultySelectionDiv());
+        return displayCard;
+    };
 
-        getPlayerTypeSelection() {
-            const playerSelectionDiv = document.createElement("div");
-            // Make sure to add appropriate styling
-            playerSelectionDiv.innerHTML = `
+    const getPlayerTypeSelection = (parentDiv) => {
+        const playerSelectionDiv = document.createElement("div");
+        playerSelectionDiv.classList.add("player-type-sel");
+        // Make sure to add appropriate styling
+        playerSelectionDiv.innerHTML = `
                 <p>Choose Player<p>
                 <button>Human</button>
                 <button>CPU</button>
             `;
-            const buttonList = document.querySelectorAll(".player-type-sel button");
-            buttonList.forEach(button => {
-                button.addEventListener('click', () => {
-                    for (const btn of buttonList) {
-                        btn.classList.remove('retention');
-                    }
-                    button.classList.toggle('retention');
-                });
+        const buttonList = playerSelectionDiv.querySelectorAll("button");
+        buttonList.forEach(button => {
+            button.addEventListener('click', () => {
+                for (const btn of buttonList) {
+                    btn.classList.remove('retention');
+                }
+                button.classList.toggle('retention');
+                const diffDiv = parentDiv.querySelector(".diff-sel");
+                if (diffDiv === undefined) {
+                    return;
+                }
+                if (button.textContent === 'CPU') {
+                    diffDiv.style.display = 'flex';
+                    console.log("Show");
+                } else {
+                    diffDiv.style.display = 'none';
+                    console.log("Hide");
+                }
             });
-            return playerSelectionDiv;
-        },
+        });
+        return playerSelectionDiv;
+    };
 
-        getCharDisplay() {
-            const displayImg = document.createElement("img");
-            displayImg.setAttribute('src', "./assets/human.jpg");
-            return displayImg;
-        },
+    const getCharDisplay = () => {
+        const displayImg = document.createElement("img");
+        displayImg.setAttribute('src', humanImage);
+        return displayImg;
+    };
 
-        getDifficultySelectionDiv() {
-            const diffSelectDiv = document.createElement("div");
-            diffSelectDiv.innerHtml = `
+    const getDifficultySelectionDiv = () => {
+        const diffSelectDiv = document.createElement("div");
+        diffSelectDiv.classList.add("diff-sel");
+        diffSelectDiv.innerHTML = `
                 <p>Difficulty</p>
                 <button>Easy</button>
                 <button>Medium</button>
                 <button>Hard</button>
             `;
-            const buttonList = document.querySelectorAll(".diff-sel button");
-            buttonList.forEach(button => {
-                button.addEventListener('click', () => {
-                    for (const btn of buttonList) {
-                        btn.classList.remove('retention');
-                    }
-                    button.classList.toggle('retention');
-                });
+        const buttonList = diffSelectDiv.querySelectorAll("button");
+        buttonList.forEach(button => {
+            button.addEventListener('click', () => {
+                for (const btn of buttonList) {
+                    btn.classList.remove('retention');
+                }
+                button.classList.toggle('retention');
             });
-            return diffSelectDiv;
-        }
+        });
+        return diffSelectDiv;
+    };
 
-    }
-}
+    return { getFullDisplayCard };
+};
+
+export default createPlayerCardUI;
+
 

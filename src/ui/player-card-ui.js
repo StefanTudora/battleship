@@ -3,7 +3,6 @@ import './player-card-style.css';
 
 const createPlayerCardUI = () => {
     // TODO -> Use dynamic imports, and cache the images for easier use
-
     const getFullDisplayCard = (placement) => {
         const displayCard = document.createElement('div');
         displayCard.classList.add("player-pres");

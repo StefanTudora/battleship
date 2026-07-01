@@ -1,0 +1,37 @@
+
+
+.tile-board {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 40rem;
+    height: 40rem;
+    gap: 5px;
+    background-color: black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 10px;
+}
+
+.tile-board > * {
+    display: inline-flex;
+    flex: 0 0 calc(10% - 5px);
+    /* flex-basis: calc(10% - 5px); */
+    background-color: #2e383f;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+
+    height: auto;
+    width: auto;
+}
+
+.valid {
+    background-color: green;
+}
+
+.invalid {
+    background-color: red;
+}

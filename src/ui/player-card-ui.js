@@ -2,7 +2,9 @@ import humanImage from '../assets/human.jpg';
 import './player-card-style.css';
 
 const createPlayerCardUI = () => {
-    // TODO -> Use dynamic imports, and cache the images for easier use
+
+    const portraitMap = new Map();
+
     const getFullDisplayCard = (placement) => {
         const displayCard = document.createElement('div');
         displayCard.classList.add("player-pres");
@@ -16,14 +18,13 @@ const createPlayerCardUI = () => {
         }
         displayCard.appendChild(getPlayerTypeSelection(displayCard));
         displayCard.appendChild(getCharDisplay());
-        displayCard.appendChild(getDifficultySelectionDiv());
+        displayCard.appendChild(getDifficultySelectionDiv(displayCard));
         return displayCard;
     };
 
     const getPlayerTypeSelection = (parentDiv) => {
         const playerSelectionDiv = document.createElement("div");
         playerSelectionDiv.classList.add("player-type-sel");
-        // Make sure to add appropriate styling
         playerSelectionDiv.innerHTML = `
                 <p>Choose Player<p>
                 <button>Human</button>
@@ -58,7 +59,7 @@ const createPlayerCardUI = () => {
         return displayImg;
     };
 
-    const getDifficultySelectionDiv = () => {
+    const getDifficultySelectionDiv = (displayCard) => {
         const diffSelectDiv = document.createElement("div");
         diffSelectDiv.classList.add("diff-sel");
         diffSelectDiv.innerHTML = `
@@ -69,15 +70,39 @@ const createPlayerCardUI = () => {
             `;
         const buttonList = diffSelectDiv.querySelectorAll("button");
         buttonList.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (event) => {
+                const controlElem = event.currentTarget;
                 for (const btn of buttonList) {
                     btn.classList.remove('retention');
                 }
-                button.classList.toggle('retention');
+                controlElem.classList.toggle('retention');
+                const assetLabel = controlElem.textContent.toLowerCase();
+                setPlayerPortrait(controlElem.textContent.toLowerCase(), displayCard.querySelector('img'));
             });
         });
         return diffSelectDiv;
     };
+
+    const setPlayerPortrait = (portraitAsset, imgElement) => {
+        if (!portraitMap.has(portraitAsset)) {
+            console.log("Importing the image");
+            new Promise((resolve, reject) => {
+                const charPortait = import(`../assets/${portraitAsset}.png`);
+                if (charPortait !== undefined) {
+                    resolve(charPortait);
+                } else {
+                    reject(`Couldn' find the asset labeled ${assetName}`);
+                }
+            }).then((portrait) => {
+                imgElement.setAttribute('src', portrait.default);
+                portraitMap.set(portraitAsset, portrait.default);
+            }).catch((errorMsg) => {
+                console.log(errorMsg);
+            });
+        } else {
+            imgElement.setAttribute('src', portraitMap.get(portraitAsset));
+        }
+    }
 
     return { getFullDisplayCard };
 };

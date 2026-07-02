@@ -4,6 +4,7 @@ import "@fontsource/orbitron/400.css";
 
 import createCard from './ui/player-card-ui.js';
 import creatorObj from './ui/ship-placement-ui.js'
+import createMDiv from './ui/ship-pl-master.js';
 
 function insertPlayerCard() {
     const { getFullDisplayCard } = createCard();
@@ -23,7 +24,8 @@ function insertPlayerCard() {
         parentDiv.replaceChildren();
         parentDiv.appendChild(player);
         const tileDiv = creatorObj().createTileBoard();
-        parentDiv.appendChild(tileDiv);
+        const newDiv = createMDiv().getMasterCard();
+        parentDiv.appendChild(newDiv);
     }); 
 
 }

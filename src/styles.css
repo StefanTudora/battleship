@@ -83,7 +83,7 @@ footer {
     height: 20vh;
     bottom: 0px;
     width: 100vw;
-    background-color: #07617d;
+    background-color: #062452;
 }
 
 footer {
@@ -91,7 +91,6 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     border: #000 solid 0.4rem;
 }
 

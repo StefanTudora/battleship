@@ -1,0 +1,38 @@
+
+.master-div {
+    display: inline-grid;
+    grid-template-areas: 
+        "player-pres player-pres"
+        "button-control ship-count"
+        "board board";
+    justify-content: center;
+    align-items: center;
+}
+
+.master-div > div:first-of-type {
+    grid-area: player-pres;
+    color: white;
+}
+
+.master-div > button {
+    grid-area: button-control;
+    color: white;
+}
+
+
+.master-div > div:nth-of-type(2) {
+    grid-area: ship-count;
+    color: white;
+}
+
+.master-div > div:last-of-type {
+    grid-area: board;
+}
+
+.master-div > div:not(:last-of-type) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.75rem;
+}

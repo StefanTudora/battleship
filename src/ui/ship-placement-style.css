@@ -1,11 +1,10 @@
-
-
 .tile-board {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     width: 40rem;
     height: 40rem;
     gap: 5px;
@@ -17,8 +16,6 @@
 }
 
 .tile-board > * {
-    display: inline-flex;
-    flex: 0 0 calc(10% - 5px);
     /* flex-basis: calc(10% - 5px); */
     background-color: #2e383f;
     aspect-ratio: 1 / 1;
@@ -26,6 +23,17 @@
 
     height: auto;
     width: auto;
+
+    transition: 0.1s ease;
+}
+
+
+.space {
+    background-color: gray;
+}
+
+.placement {
+    background-color: blue;
 }
 
 .valid {

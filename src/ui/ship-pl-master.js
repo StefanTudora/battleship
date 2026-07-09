@@ -1,9 +1,14 @@
 import TileBoardCreator from './ship-placement-ui.js';
 import './ship-pl-master.css';
 
-const getMasterPlacement = () => {
+// This object should handle the creation of the gameboard and ship placement
+// The object must recive the player info
+// After bot players finished this portion of the init, they must swap boards
+const controlBoard = () => {
 
-    const getMasterCard = () => {
+    let shareConfig = undefined;
+
+    const createControlBoard = () => {
 
         const masterCardDiv = document.createElement("div");
 
@@ -11,15 +16,25 @@ const getMasterPlacement = () => {
 
         masterCardDiv.appendChild(getPlayerPresentation());
 
-        masterCardDiv.appendChild(getPlacementDirControl());
+        masterCardDiv.appendChild(getPlacementDirControl()); 
 
         masterCardDiv.appendChild(getPlayerPresentation());
 
-        masterCardDiv.appendChild(TileBoardCreator().createTileBoard());
+        const tileBoard = TileBoardCreator()
+        masterCardDiv.appendChild(tileBoard.createTileBoard());
+
+        // Initialize the sharedConfigObj
+        shareConfig = {
+            direction: 'HORIZONTAL',
+            length: 5,
+        }
+
+        tileBoard.attachSharedConfig(shareConfig);
 
         return masterCardDiv;
     }
 
+    // TODO -> write better code
     const getPlayerPresentation = () => {
         const div = document.createElement('div');
         const plP = document.createElement("p");
@@ -35,14 +50,23 @@ const getMasterPlacement = () => {
     }
 
     const getPlacementDirControl = () => {
-        const btn = document.createElement("button");
-        btn.textContent = "Big Button";
-        return btn;
+        const buttonContainer = document.createElement("div");
+        buttonContainer.innerHTML = `
+            <input type="checkbox" id="toggle" class="toggleCheckbox">
+            <label for="toggle" class="toggleContainer">
+                <div>Horizontal</div>
+                <div>Vertical</div>
+            </label>
+        `;
+        buttonContainer.querySelector('#toggle').addEventListener('click', (event) => {
+            // Use share state obj to manipulate the highlighting direction
+            shareConfig.direction = event.currentTarget.checked ? 'VERTICAL' : 'HORIZONTAL';
+            console.log(shareConfig.direction);
+        });
+        return buttonContainer;
     }
 
-
-    return { getMasterCard };
-
+    return { createControlBoard };
 }
 
-export default getMasterPlacement;
+export default controlBoard;

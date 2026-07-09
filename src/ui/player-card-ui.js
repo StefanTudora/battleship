@@ -1,4 +1,3 @@
-import humanImage from '../assets/human.jpg';
 import './player-card-style.css';
 
 const createPlayerCardUI = () => {
@@ -16,13 +15,13 @@ const createPlayerCardUI = () => {
                 displayCard.classList.add("right-extend");
                 break;
         }
-        displayCard.appendChild(getPlayerTypeSelection(displayCard));
         displayCard.appendChild(getCharDisplay());
         displayCard.appendChild(getDifficultySelectionDiv(displayCard));
+        displayCard.appendChild(getPlayerTypeSelection(displayCard));
         return displayCard;
     };
 
-    const getPlayerTypeSelection = (parentDiv) => {
+    const getPlayerTypeSelection = (displayCard) => {
         const playerSelectionDiv = document.createElement("div");
         playerSelectionDiv.classList.add("player-type-sel");
         playerSelectionDiv.innerHTML = `
@@ -37,25 +36,33 @@ const createPlayerCardUI = () => {
                     btn.classList.remove('retention');
                 }
                 button.classList.toggle('retention');
-                const diffDiv = parentDiv.querySelector(".diff-sel");
+                const diffDiv = displayCard.querySelector(".diff-sel");
                 if (diffDiv === undefined) {
                     return;
                 }
                 if (button.textContent === 'CPU') {
                     diffDiv.style.display = 'flex';
                     console.log("Show");
+                    // Make sure to select the `Easy` difficulty as o placeholder
+                    const diffButton = displayCard.querySelector(".diff-sel > button:first-of-type");
+                    if (diffButton === null || diffButton === undefined) {
+                        return;
+                    }
+                    diffButton.click();
                 } else {
                     diffDiv.style.display = 'none';
-                    console.log("Hide");
+                    // Displaye the human portrait
+                    setPlayerPortrait(button.textContent.toLowerCase(), displayCard.querySelector('img'));
                 }
             });
         });
+        buttonList[0].click();
         return playerSelectionDiv;
     };
 
     const getCharDisplay = () => {
         const displayImg = document.createElement("img");
-        displayImg.setAttribute('src', humanImage);
+        setPlayerPortrait('human', displayImg);
         return displayImg;
     };
 
@@ -102,6 +109,10 @@ const createPlayerCardUI = () => {
         } else {
             imgElement.setAttribute('src', portraitMap.get(portraitAsset));
         }
+    }
+
+    const getPlayerModel = () => {
+        // create the player model
     }
 
     return { getFullDisplayCard };

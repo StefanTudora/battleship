@@ -1,3 +1,5 @@
+import { BoardProxy } from '../model/board-proxy.js';
+import { GameBoard } from '../model/gameboard.js';
 import './ship-placement-style.css'
 
 // Rename this file and place in it's own folder with the style sheet
@@ -5,11 +7,16 @@ import './ship-placement-style.css'
 // Make file modular in order to reuse the tile Board
 const boardPL = () => {
 
-    const VERTICAL = "vertical";
-    const HORIZONTAL = "horizontal";
+    // Revise the variables here
+    const VERTICAL = "VERTICAL";
+    const HORIZONTAL = "HORIZONTAL";
 
     // Main div containing tile borad cells
     const tileBoard = document.createElement("div");
+    // Initialize the model of the board
+    const gameBoard = new GameBoard();
+    // Shared Configuration object
+    let sharedConfig = undefined;
 
     const createTileBoard = () => {
         // Create the tileBoard for ship placement
@@ -23,7 +30,7 @@ const boardPL = () => {
                 childDiv.dataset.col = col;
                 // Add highlight and clear styles
                 childDiv.addEventListener('mouseover', getHighlightListener());
-                childDiv.addEventListener('mouseout', getcleanStyleListener());
+                childDiv.addEventListener('mouseout', getCleanStyleListener());
                 childDiv.addEventListener('click', getPlaceShipListener());
             }
         }
@@ -31,19 +38,12 @@ const boardPL = () => {
         return tileBoard;
     };
 
-    // TODO -> expanded further when base functionalities are stable
-    // Meant to work with a drag and drop feature
-    const createShipYard = () => {
-        // Create selectable shipyard elements
-        const shipYard = document.createElement("div");
-        return shipYard;
-    }
-
     const getHighlightListener = () => {
         return (event) => {
             const node = event.currentTarget;
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
-            const [cells, style] = getStateOfCurrentPlacement([currX, currY], 5, HORIZONTAL);
+            const [cells, style] = getStateOfCurrentPlacement([currX, currY], 5, sharedConfig.direction);
+            console.log(style);
             for (const cell of cells) {
                 cell.classList.add(style);
             }
@@ -51,6 +51,7 @@ const boardPL = () => {
     }
 
     const getStateOfCurrentPlacement = (origin, length, direction) => {
+        console.log(direction);
         const [currX, currY] = origin;
         const cells = [];
         let cellStyle = 'valid';
@@ -72,13 +73,20 @@ const boardPL = () => {
         return [cells, cellStyle];
     }
 
-    const getcleanStyleListener = () => {
+    const getCleanStyleListener = () => {
         return (event) => {
             const node = event.currentTarget;
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
-            for (let colIdx = currY; colIdx < 10 && colIdx < currY + 5; ++colIdx) {
-                const elem = getCell(currX, colIdx);
-                elem.classList.remove("invalid", "valid");
+            if (sharedConfig.direction === 'HORIZONTAL') {
+                for (let colIdx = currY; colIdx < 10 && colIdx < currY + 5; ++colIdx) {
+                    const elem = getCell(currX, colIdx);
+                    elem.classList.remove("invalid", "valid");
+                }
+            } else {
+                for (let rowIdx = currX; rowIdx < 10 && rowIdx < currX + 5; ++rowIdx) {
+                    const elem = getCell(rowIdx, currY);
+                    elem.classList.remove("invalid", "valid");
+                }
             }
         }
     }
@@ -91,12 +99,23 @@ const boardPL = () => {
             }
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
 
+            // update the model with the ship info
+            gameBoard.addShipToBoard([currX, currY], 0, 5);
+
             // Handle horrizontal case
             const lStack = [];
-            for (let colIdx = currY; colIdx < currY + 5; ++colIdx) {
-                const elem = getCell(currX, colIdx);
-                elem.classList.add("placement");
-                lStack.push([currX, colIdx]);
+            if (sharedConfig.direction === 'HORIZONTAL') {
+                for (let colIdx = currY; colIdx < currY + 5; ++colIdx) {
+                    const elem = getCell(currX, colIdx);
+                    elem.classList.add("placement");
+                    lStack.push([currX, colIdx]);
+                }
+            } else {
+                for (let rowIdx = currX; rowIdx < currX + 5; ++rowIdx) {
+                    const elem = getCell(rowIdx, currY);
+                    elem.classList.add("placement");
+                    lStack.push([rowIdx, currY]);
+                }
             }
 
             const dir = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
@@ -123,7 +142,29 @@ const boardPL = () => {
         return tileBoard.querySelector(`div[data-row='${x}'][data-col='${y}']`);
     }
 
-    return { createTileBoard };
+    const getProxyBoard = () => {
+        return new BoardProxy(gameBoard);
+    }
+
+    const attachSharedConfig = (config) => {
+        sharedConfig = config;
+    }
+
+    const detachSharedConfig = () => {
+        // make sure to detach from the shared object with the parent
+        this.sharedConfig = null;
+        // remove all listeners from all cells
+        tileBoard.childNodes.forEach(node => {
+            // Replace with cloned element
+            node.replaceWith(node.cloneNode(true));
+        })
+    }
+
+    return {
+        createTileBoard,
+        attachSharedConfig,
+        detachSharedConfig
+    };
 };
 
 export default boardPL;

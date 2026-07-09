@@ -11,7 +11,7 @@ class NaiveStrategy extends BaseStrategy {
         this.coordinates = new Array();
         // Create array containing all coordinates found on board
         this.initPoints();
-        // Use Fisher-Yates to sort the points
+        // Use Fisher-Yates to shuffle the points
         for (let idx = this.coordinates.length - 1; idx >= 0; --idx) {
             const swapIdx = Math.floor(Math.random() * (idx + 1));
             if (idx == swapIdx) {

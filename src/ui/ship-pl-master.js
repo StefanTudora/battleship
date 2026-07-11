@@ -6,7 +6,8 @@ import './ship-pl-master.css';
 // After bot players finished this portion of the init, they must swap boards
 const controlBoard = () => {
 
-    let shareConfig = undefined;
+    let shareConfig    = undefined;
+    let tileBoardCache = undefined;
 
     const createControlBoard = () => {
 
@@ -15,39 +16,52 @@ const controlBoard = () => {
         masterCardDiv.classList.add("master-div");
 
         masterCardDiv.appendChild(getPlayerPresentation());
+        masterCardDiv.appendChild(getPlacementDirControl());
+        masterCardDiv.appendChild(getShipCount());
 
-        masterCardDiv.appendChild(getPlacementDirControl()); 
+        tileBoardCache = TileBoardCreator();
+        tileBoardCache.createTileBoard();
+        masterCardDiv.appendChild(tileBoardCache.getTileBoard());
 
-        masterCardDiv.appendChild(getPlayerPresentation());
-
-        const tileBoard = TileBoardCreator()
-        masterCardDiv.appendChild(tileBoard.createTileBoard());
-
-        // Initialize the sharedConfigObj
         shareConfig = {
             direction: 'HORIZONTAL',
-            length: 5,
+            decrementCallback: () => {
+                const display = masterCardDiv.querySelector('div:nth-of-type(2) > p:last-of-type');
+                const noShips = display.textContent;
+                const value   = parseInt(noShips) - 1;
+                display.textContent = value.toString();
+                if (value === 0) {
+                    // make available a control for advancement
+                    document.querySelector("#flow-control");
+                }
+            }
         }
 
-        tileBoard.attachSharedConfig(shareConfig);
+        tileBoardCache.attachSharedConfig(shareConfig);
 
         return masterCardDiv;
-    }
+    };
 
     // TODO -> write better code
-    const getPlayerPresentation = () => {
+    const getShipCount = () => {
         const div = document.createElement('div');
-        const plP = document.createElement("p");
+        const msg = document.createElement("p");
         const cnt = document.createElement("p");
 
-        div.appendChild(plP);
+        div.appendChild(msg);
         div.appendChild(cnt);
-        plP.textContent = "Renaining Ships :";
 
+        msg.textContent = "Renaining Ships :";
         cnt.textContent = "5";
 
         return div;
-    }
+    };
+
+    const getPlayerPresentation = () => {
+        const msg       = document.createElement('p');
+        msg.textContent = 'Board configuration for Human';
+        return msg;
+    };
 
     const getPlacementDirControl = () => {
         const buttonContainer = document.createElement("div");
@@ -59,7 +73,9 @@ const controlBoard = () => {
             </label>
         `;
         buttonContainer.querySelector('#toggle').addEventListener('click', (event) => {
-            // Use share state obj to manipulate the highlighting direction
+            /*
+             *  Shared state object used in the listeners of the board
+             */
             shareConfig.direction = event.currentTarget.checked ? 'VERTICAL' : 'HORIZONTAL';
             console.log(shareConfig.direction);
         });

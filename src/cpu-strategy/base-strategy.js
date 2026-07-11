@@ -21,6 +21,13 @@ class BaseStrategy {
         const point = [Math.floor(Math.random() * this.rows), Math.floor(Math.random() * this.cols)];
         this.observableBoard.receiveAttack(point);
     }
+
+    setGameBoard() {
+        this.observableBoard = observableBoard;
+        const size           = observableBoard.getBoardSize();
+        this.rows            = size[0];
+        this.cols            = size[1];
+    }
 }
 
-export { BaseStrategy };
+export default BaseStrategy;

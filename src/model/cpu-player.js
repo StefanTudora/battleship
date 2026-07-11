@@ -46,4 +46,4 @@ class CPUPlayer extends Player {
     }
 }
 
-export { CPUPlayer };
+export default CPUPlayer;

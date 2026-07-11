@@ -8,4 +8,4 @@ class HumanPlayer extends Player {
     }
 }
 
-export { HumanPlayer };
+export default HumanPlayer;

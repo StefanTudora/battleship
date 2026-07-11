@@ -51,7 +51,7 @@ main {
     box-sizing: border-box;
 }
 
-#menu > button {
+#flow-control > button {
     font-size: 4rem;
     border-radius: 0.5rem;
     background-color: #2e383f;
@@ -59,7 +59,7 @@ main {
     transition: 0.3s;
 }
 
-#menu > button:hover {
+#flow-control > button:hover {
     scale: 1.1;
     background-color: #f9a828;
 }

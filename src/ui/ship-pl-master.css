@@ -5,29 +5,32 @@
         "player-pres player-pres"
         "button-control ship-count"
         "board board";
-    justify-content: center;
+    width: 50rem;
+    justify-content: space-between;
     align-items: center;
     gap: 0px 1rem 0px 1rem;
 }
 
-.master-div > div:first-of-type {
+.master-div > p:first-of-type {
     grid-area: player-pres;
+    text-align: center;
+    font-size: 2rem;
     color: white;
 }
 
-.master-div > div:nth-of-type(2) {
+.master-div > div:first-of-type {
     grid-area: button-control;
     color: white;
 }
 
-
-.master-div > div:nth-of-type(3) {
+.master-div > div:nth-of-type(2) {
     grid-area: ship-count;
     color: white;
 }
 
 .master-div > div:last-of-type {
     grid-area: board;
+    justify-self: center;
 }
 
 .master-div > div:not(:last-of-type) {

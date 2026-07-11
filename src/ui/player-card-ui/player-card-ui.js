@@ -3,9 +3,9 @@ import './player-card-style.css';
 const createPlayerCardUI = () => {
 
     const portraitMap = new Map();
+    const displayCard = document.createElement('div');
 
     const getFullDisplayCard = (placement) => {
-        const displayCard = document.createElement('div');
         displayCard.classList.add("player-pres");
         switch (placement) {
             case "LEFT":
@@ -32,6 +32,9 @@ const createPlayerCardUI = () => {
         const buttonList = playerSelectionDiv.querySelectorAll("button");
         buttonList.forEach(button => {
             button.addEventListener('click', () => {
+                if (button.classList.contains('retention')) {
+                    return;
+                }
                 for (const btn of buttonList) {
                     btn.classList.remove('retention');
                 }
@@ -42,8 +45,7 @@ const createPlayerCardUI = () => {
                 }
                 if (button.textContent === 'CPU') {
                     diffDiv.style.display = 'flex';
-                    console.log("Show");
-                    // Make sure to select the `Easy` difficulty as o placeholder
+                    // Make sure to select the `Easy` difficulty as a placeholder
                     const diffButton = displayCard.querySelector(".diff-sel > button:first-of-type");
                     if (diffButton === null || diffButton === undefined) {
                         return;
@@ -51,7 +53,7 @@ const createPlayerCardUI = () => {
                     diffButton.click();
                 } else {
                     diffDiv.style.display = 'none';
-                    // Displaye the human portrait
+                    // Display the human portrait
                     setPlayerPortrait(button.textContent.toLowerCase(), displayCard.querySelector('img'));
                 }
             });
@@ -94,11 +96,11 @@ const createPlayerCardUI = () => {
         if (!portraitMap.has(portraitAsset)) {
             console.log("Importing the image");
             new Promise((resolve, reject) => {
-                const charPortait = import(`../assets/${portraitAsset}.png`);
+                const charPortait = import(`../../assets/${portraitAsset}.png`);
                 if (charPortait !== undefined) {
                     resolve(charPortait);
                 } else {
-                    reject(`Couldn' find the asset labeled ${assetName}`);
+                    reject(`Couldn't find the asset labeled ${assetName}`);
                 }
             }).then((portrait) => {
                 imgElement.setAttribute('src', portrait.default);
@@ -109,11 +111,45 @@ const createPlayerCardUI = () => {
         } else {
             imgElement.setAttribute('src', portraitMap.get(portraitAsset));
         }
-    }
+    };
 
-    const getPlayerModel = () => {
+    
+    const getPlayerModel = async () => {
         // create the player model
-    }
+        const selectedPlayer = getTextContentOfRetention(displayCard.querySelector('player-type-sel'));
+        const playerType     = await import(`../../model/${selectedPlayer}-player.js`);
+        const PlayerType     = playerType.default; 
+        if (selectedPlayer === 'CPU') {
+            let strategy     = undefined;
+            const difficulty = getTextContentOfRetention(displayCard.querySelector('diff-sel'));
+            switch (difficulty) {
+                // Make sure to change all this strategy names to make it easier to import
+                case 'Easy':
+                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    break;
+                case 'Medium':
+                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    break;
+                case 'Hard':
+                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    break;
+            }
+            const Strategy = strategy.default;
+            // Modify the strategy to allow the board to be later attached
+            return new PlayerType(new Strategy());
+        } else {
+            return new PlayerType();
+        }
+    };
+
+    const getTextContentOfRetention = (parentElem) => {
+        for (const child of parentElem.childNodes) {
+            if (child.classList.contains('retention')) {
+                return child.textContent;
+            }
+        }
+        return undefined;
+    };
 
     return { getFullDisplayCard };
 };

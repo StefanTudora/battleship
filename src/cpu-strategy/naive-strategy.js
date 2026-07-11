@@ -11,15 +11,7 @@ class NaiveStrategy extends BaseStrategy {
         this.coordinates = new Array();
         // Create array containing all coordinates found on board
         this.initPoints();
-        // Use Fisher-Yates to shuffle the points
-        for (let idx = this.coordinates.length - 1; idx >= 0; --idx) {
-            const swapIdx = Math.floor(Math.random() * (idx + 1));
-            if (idx == swapIdx) {
-                // Skip swapping with itself
-                continue;
-            }
-            [this.coordinates[idx], this.coordinates[swapIdx]] = [this.coordinates[swapIdx], this.coordinates[idx]];
-        }
+        this.shufflePoints();
     }
 
     initPoints() {
@@ -30,10 +22,20 @@ class NaiveStrategy extends BaseStrategy {
         }
     }
 
+    shufflePoints() {
+        // Use Fisher-Yates to shuffle the points
+        for (let idx = this.coordinates.length - 1; idx >= 0; --idx) {
+            const swapIdx = Math.floor(Math.random() * (idx + 1));
+            if (idx == swapIdx) {
+                // Skip swapping with itself
+                continue;
+            }
+            [ this.coordinates[idx], this.coordinates[swapIdx] ] = [ this.coordinates[swapIdx], this.coordinates[idx] ];
+        }
+    }
 
     getBestPointToAttack() {
         const point = this.coordinates.pop();
-        // console.log("Plan to attack " + point);
         return point;
     }
 
@@ -41,8 +43,8 @@ class NaiveStrategy extends BaseStrategy {
      * Pop from the randomly shuffled array the last entry and return for attack
      */
     executeStrategy() {
-        this.observableBoard.receiveAttack(this.coordinates.pop());
+        this.observableBoard.receiveAttack(getBestPointToAttack());
     }
 }
 
-export { NaiveStrategy };
+export default NaiveStrategy;

@@ -5,17 +5,17 @@ import './ship-placement-style.css'
 // Rename this file and place in it's own folder with the style sheet
 // This should be a tile file easy to use 
 // Make file modular in order to reuse the tile Board
-const boardPL = () => {
+/*
+ * Config view of the board
+ */
+const boardView = () => {
 
-    // Revise the variables here
-    const VERTICAL = "VERTICAL";
+    const VERTICAL   = "VERTICAL";
     const HORIZONTAL = "HORIZONTAL";
 
-    // Main div containing tile borad cells
-    const tileBoard = document.createElement("div");
-    // Initialize the model of the board
-    const gameBoard = new GameBoard();
-    // Shared Configuration object
+    const tileBoard  = document.createElement("div");
+    const gameBoard  = new GameBoard();
+    const ships      = [2, 2, 3, 4, 5];
     let sharedConfig = undefined;
 
     const createTileBoard = () => {
@@ -28,21 +28,23 @@ const boardPL = () => {
                 // Set the coordinates for the cell
                 childDiv.dataset.row = row;
                 childDiv.dataset.col = col;
-                // Add highlight and clear styles
+                // Add highlight/clear styles and placement listener
                 childDiv.addEventListener('mouseover', getHighlightListener());
                 childDiv.addEventListener('mouseout', getCleanStyleListener());
                 childDiv.addEventListener('click', getPlaceShipListener());
             }
         }
-        console.log(tileBoard.childElementCount);
-        return tileBoard;
     };
+
+    const getTileBoard = () => {
+        return tileBoard;
+    }
 
     const getHighlightListener = () => {
         return (event) => {
             const node = event.currentTarget;
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
-            const [cells, style] = getStateOfCurrentPlacement([currX, currY], 5, sharedConfig.direction);
+            const [cells, style] = getStateOfCurrentPlacement([currX, currY], ships.at(-1), sharedConfig.direction);
             console.log(style);
             for (const cell of cells) {
                 cell.classList.add(style);
@@ -98,20 +100,23 @@ const boardPL = () => {
                 return;
             }
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
-
+            
+            const shipLenght = ships.pop();
+            sharedConfig.decrementCallback();
+            
             // update the model with the ship info
             gameBoard.addShipToBoard([currX, currY], 0, 5);
 
             // Handle horrizontal case
             const lStack = [];
             if (sharedConfig.direction === 'HORIZONTAL') {
-                for (let colIdx = currY; colIdx < currY + 5; ++colIdx) {
+                for (let colIdx = currY; colIdx < currY + shipLenght; ++colIdx) {
                     const elem = getCell(currX, colIdx);
                     elem.classList.add("placement");
                     lStack.push([currX, colIdx]);
                 }
             } else {
-                for (let rowIdx = currX; rowIdx < currX + 5; ++rowIdx) {
+                for (let rowIdx = currX; rowIdx < currX + shipLenght; ++rowIdx) {
                     const elem = getCell(rowIdx, currY);
                     elem.classList.add("placement");
                     lStack.push([rowIdx, currY]);
@@ -135,13 +140,25 @@ const boardPL = () => {
                     dCell.classList.add("space");
                 }
             }
+
+            if (ships.length === 0) {
+                // No more ships to place, avoid undefined behaviour
+                detachCellListeners();
+            }
         }
     }
 
+    /*
+     * Get the cell by dataset coordinates
+     */
     const getCell = (x, y) => {
         return tileBoard.querySelector(`div[data-row='${x}'][data-col='${y}']`);
     }
 
+    /*
+     * Return the proxy which hides the configuration of the board,
+     * but revelas internal states when interacting with it
+     */
     const getProxyBoard = () => {
         return new BoardProxy(gameBoard);
     }
@@ -151,20 +168,25 @@ const boardPL = () => {
     }
 
     const detachSharedConfig = () => {
-        // make sure to detach from the shared object with the parent
+        // detach from the shared object with the parent, no longer needed
         this.sharedConfig = null;
-        // remove all listeners from all cells
-        tileBoard.childNodes.forEach(node => {
+    }
+
+    const detachCellListeners = () => {
+        tileBoard.childNodes.forEach(cell => {
+            // Remove parasitic valid classList for last added element
+            cell.classList.remove('valid');
             // Replace with cloned element
-            node.replaceWith(node.cloneNode(true));
+            cell.replaceWith(cell.cloneNode(true));    
         })
     }
 
     return {
         createTileBoard,
+        getTileBoard,
         attachSharedConfig,
-        detachSharedConfig
+        detachSharedConfig,
     };
 };
 
-export default boardPL;
+export default boardView;

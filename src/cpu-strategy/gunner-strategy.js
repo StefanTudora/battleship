@@ -75,4 +75,4 @@ class GunnerStrategy extends NaiveStrategy {
     }
 }
 
-export { GunnerStrategy };
+export default GunnerStrategy;

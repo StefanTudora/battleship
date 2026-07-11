@@ -8,6 +8,7 @@ class SeasonedGunner extends GunnerStrategy {
     }
 
     initPoints() {
+        // Reduce the total number of search points by half
         for (let row = 0; row < 10; ++row) {
             for (let col = 0; col < 10; ++col) {
                 if ((row + col) % 2) {
@@ -19,4 +20,4 @@ class SeasonedGunner extends GunnerStrategy {
     }
 }
 
-export { SeasonedGunner };
+export default SeasonedGunner;

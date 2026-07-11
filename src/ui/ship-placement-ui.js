@@ -2,11 +2,8 @@ import { BoardProxy } from '../model/board-proxy.js';
 import { GameBoard } from '../model/gameboard.js';
 import './ship-placement-style.css'
 
-// Rename this file and place in it's own folder with the style sheet
-// This should be a tile file easy to use 
-// Make file modular in order to reuse the tile Board
 /*
- * Config view of the board
+ * View of the board
  */
 const boardView = () => {
 
@@ -19,16 +16,22 @@ const boardView = () => {
     let sharedConfig = undefined;
 
     const createTileBoard = () => {
-        // Create the tileBoard for ship placement
+        /*
+         * Visual representation of the field
+         */
         tileBoard.classList.add("tile-board");
         for (let row = 0; row < 10; ++row) {
             for (let col = 0; col < 10; ++col) {
                 const childDiv = document.createElement("div");
                 tileBoard.appendChild(childDiv);
-                // Set the coordinates for the cell
+                /*
+                 * Attached to dataset for faster query
+                 */
                 childDiv.dataset.row = row;
                 childDiv.dataset.col = col;
-                // Add highlight/clear styles and placement listener
+                /*
+                 * Listeners for highlight, clear and placement
+                 */
                 childDiv.addEventListener('mouseover', getHighlightListener());
                 childDiv.addEventListener('mouseout', getCleanStyleListener());
                 childDiv.addEventListener('click', getPlaceShipListener());
@@ -68,8 +71,10 @@ const boardView = () => {
                 cells.push(getCell(idx, currY));
             }
         }
-        if (cells.some(node => node.classList.length > 0) || cells.length !== length) {
-            // Either we exceed board or overlap a ship
+        if (!gameBoard.canBePlaced(origin, direction === 'VERTICAL' ? 1 : 0, length)) {
+            /*
+             * Either we exceed board or overlap a ship
+             */
             cellStyle = 'invalid';
         }
         return [cells, cellStyle];
@@ -101,11 +106,11 @@ const boardView = () => {
             }
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
             
+            // update the model with the ship info
+            gameBoard.addShipToBoard([currX, currY], sharedConfig.direction === 'VERTICAL' ? 1 : 0, ships.at(-1));
+
             const shipLenght = ships.pop();
             sharedConfig.decrementCallback();
-            
-            // update the model with the ship info
-            gameBoard.addShipToBoard([currX, currY], 0, 5);
 
             // Handle horrizontal case
             const lStack = [];
@@ -177,8 +182,27 @@ const boardView = () => {
             // Remove parasitic valid classList for last added element
             cell.classList.remove('valid');
             // Replace with cloned element
-            cell.replaceWith(cell.cloneNode(true));    
+            cell.replaceWith(cell.cloneNode(true));
         })
+    }
+
+    /*
+     * Used in randomized placement. Either CPU or Player choice
+     */
+    const randomize = () => {
+        for (const ship of ships) {
+            let placed = false;
+            do {
+                const [x, y] = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+                const dir    =  Math.round(Math.random());
+                placed = gameBoard.canBePlaced([x, y], dir, ships.at(-1));
+                if (placed) {
+                    gameBoard.addShipToBoard([x, y], dir, ships.at(-1));
+                    ships.pop();
+                }
+            } while (placed === false);
+        }
+        // Here a callback should be implemented, automatically advance the code to the nest stage
     }
 
     return {

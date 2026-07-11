@@ -2,8 +2,6 @@ import { Ship } from './ship.js'
 
 /*
  * Class representing the game board with precise ship placements information.
- * Each player will hold a referrence to the  enemy board but made visible only throuh a proxy.
- * As such, the players will be able to see only the hits or misses of enemy board.
  */
 class GameBoard {
 
@@ -38,12 +36,7 @@ class GameBoard {
     addShipToBoard(start, direction, length) {
         // add ship to registry
         this.#shipRegistry.set(++this.#shipCnt, new Ship(length));
-        const adv = (point, direction) => {
-            if (direction) {
-                return [point[0] + 1, point[1]];
-            }
-            return [point[0], point[1] + 1];
-        };
+        const adv = (point, direction) => direction ? [point[0] + 1, point[1]] : [point[0], point[1] + 1];
         let curr = start;
         for (let idx = 0; idx < length; ++idx) {
             this.#shipPlacement[curr[0]][curr[1]] = this.#shipCnt;
@@ -51,12 +44,40 @@ class GameBoard {
         }
     }
 
+    // Check weather the ship can be placed at the desired location
+    canBePlaced(start, direction, length) {
+        if (start[0] + length - 1 >= 10 && direction) {
+            return false;
+        }
+        if (start[1] + length - 1 >= 10 && !direction) {
+            return false;
+        }
+        const adv  = (point, direction) => direction ? [point[0] + 1, point[1]] : [point[0], point[1] + 1];
+        let curr   = start;
+        const disp = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]; 
+        // A ship will fit if its border can fit on the map
+        for (let idx = 0; idx < length; ++idx) {
+            for (const df of disp) {
+                const [dx, dy] = [curr[0] + df[0], curr[1] + df[1]];
+                if (Math.max(dx, dy) >= 10 || Math.min(dx, dy) < 0) {
+                    // The border can exit the board. We already checked if the ship fits
+                    continue;
+                }
+                if (this.#shipPlacement[dx][dy] != 0) {
+                    return false;
+                }
+            }
+            curr = adv(curr, direction);
+        }
+        return true;
+    }
+
     /*
      * Process the shot
      * @param {point} - to process
      */
     receiveAttack(point) {
-        // Augemnt the method to let the player know the ship was sunk;
+        // Augment the method to let the player know the ship was sunk;
         if (this.#shipPlacement[point[0]][point[1]] == 0) {
             return "Miss";
         }
@@ -67,8 +88,6 @@ class GameBoard {
             this.#shipRegistry.delete(this.#shipPlacement[point[0]][point[1]]);
         }
         this.#shipPlacement[point[0]][point[1]] = 0;
-        // console.log("Ship battalion active unit status : " + this.#shipRegistry.size);
-        // this.#prettyPrintBoard();
         return "Hit";
     }
 

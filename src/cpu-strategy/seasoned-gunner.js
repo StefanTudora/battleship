@@ -1,7 +1,7 @@
-import { GunnerStrategy } from "./gunner-strategy.js";
+import GunnerStrategy from "./gunner-strategy.js";
 
 
-class SeasonedGunner extends GunnerStrategy {
+export default class SeasonedGunner extends GunnerStrategy {
 
     constructor(observableBoard) {
         super(observableBoard);
@@ -19,5 +19,3 @@ class SeasonedGunner extends GunnerStrategy {
         }
     }
 }
-
-export default SeasonedGunner;

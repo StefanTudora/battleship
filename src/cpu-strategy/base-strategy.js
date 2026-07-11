@@ -4,7 +4,7 @@ import { BoardProxy } from "../model/board-proxy.js";
  * Base CPU strategy
  * Meant to be extended
  */
-class BaseStrategy {
+export default class BaseStrategy {
 
     constructor(observableBoard) {
         this.observableBoard = observableBoard;
@@ -21,13 +21,4 @@ class BaseStrategy {
         const point = [Math.floor(Math.random() * this.rows), Math.floor(Math.random() * this.cols)];
         this.observableBoard.receiveAttack(point);
     }
-
-    setGameBoard() {
-        this.observableBoard = observableBoard;
-        const size           = observableBoard.getBoardSize();
-        this.rows            = size[0];
-        this.cols            = size[1];
-    }
 }
-
-export default BaseStrategy;

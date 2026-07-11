@@ -1,10 +1,10 @@
-import { BaseStrategy } from './base-strategy.js'
+import BaseStrategy from './base-strategy.js'
 
 /*
  * Naive CPU strategy used in Easy mode
  * Has no concept of the board state, randomly attacks cells
  */
-class NaiveStrategy extends BaseStrategy {
+export default class NaiveStrategy extends BaseStrategy {
 
     constructor(observableBoard) {
         super(observableBoard);
@@ -46,5 +46,3 @@ class NaiveStrategy extends BaseStrategy {
         this.observableBoard.receiveAttack(getBestPointToAttack());
     }
 }
-
-export default NaiveStrategy;

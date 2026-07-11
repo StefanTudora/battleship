@@ -113,7 +113,7 @@ const createPlayerCardUI = () => {
         }
     };
 
-    
+    // Maybe it's worth moving somewhere else
     const getPlayerModel = async () => {
         // create the player model
         const selectedPlayer = getTextContentOfRetention(displayCard.querySelector('player-type-sel'));

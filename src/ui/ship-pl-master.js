@@ -1,9 +1,9 @@
 import TileBoardCreator from './ship-placement-ui.js';
 import './ship-pl-master.css';
 
-// This object should handle the creation of the gameboard and ship placement
-// The object must recive the player info
-// After bot players finished this portion of the init, they must swap boards
+/*
+ *  Parent view of the board with controls
+ */
 const controlBoard = () => {
 
     let shareConfig    = undefined;
@@ -42,7 +42,6 @@ const controlBoard = () => {
         return masterCardDiv;
     };
 
-    // TODO -> write better code
     const getShipCount = () => {
         const div = document.createElement('div');
         const msg = document.createElement("p");
@@ -80,6 +79,10 @@ const controlBoard = () => {
             console.log(shareConfig.direction);
         });
         return buttonContainer;
+    }
+
+    const getBoardView = () => {
+        
     }
 
     return { createControlBoard };

@@ -1,11 +1,11 @@
-import { NaiveStrategy } from './naive-strategy.js'
+import NaiveStrategy from './naive-strategy.js'
 
 /*
  * Gunner CPU strategy used in Medium mode
  * Implements hunt and destroy 
  * Based on the Naive implementation + will investigate the search space of the hit
  */
-class GunnerStrategy extends NaiveStrategy {
+export default class GunnerStrategy extends NaiveStrategy {
 
     constructor(observableBoard) {
         super(observableBoard);
@@ -74,5 +74,3 @@ class GunnerStrategy extends NaiveStrategy {
         this.visited[point[0]][point[1]] = true;
     }
 }
-
-export default GunnerStrategy;

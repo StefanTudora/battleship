@@ -48,7 +48,6 @@ const boardView = () => {
             const node = event.currentTarget;
             const [currX, currY] = [parseInt(node.dataset.row), parseInt(node.dataset.col)];
             const [cells, style] = getStateOfCurrentPlacement([currX, currY], ships.at(-1), sharedConfig.direction);
-            console.log(style);
             for (const cell of cells) {
                 cell.classList.add(style);
             }
@@ -56,7 +55,6 @@ const boardView = () => {
     }
 
     const getStateOfCurrentPlacement = (origin, length, direction) => {
-        console.log(direction);
         const [currX, currY] = origin;
         const cells = [];
         let cellStyle = 'valid';
@@ -187,7 +185,7 @@ const boardView = () => {
     }
 
     /*
-     * Used in randomized placement. Either CPU or Player choice
+     * Used in randomized placement. Either CPU or Player choice (add Randomize option for Human)
      */
     const randomize = () => {
         for (const ship of ships) {
@@ -202,7 +200,6 @@ const boardView = () => {
                 }
             } while (placed === false);
         }
-        // Here a callback should be implemented, automatically advance the code to the nest stage
     }
 
     return {
@@ -210,6 +207,7 @@ const boardView = () => {
         getTileBoard,
         attachSharedConfig,
         detachSharedConfig,
+        randomize
     };
 };
 

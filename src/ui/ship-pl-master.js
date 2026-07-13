@@ -4,10 +4,10 @@ import './ship-pl-master.css';
 /*
  *  Parent view of the board with controls
  */
-const controlBoard = () => {
+const controlBoard = (advCallback) => {
 
     let shareConfig    = undefined;
-    let tileBoardCache = undefined;
+    let tileBoardCache = TileBoardCreator();
 
     const createControlBoard = () => {
 
@@ -19,7 +19,6 @@ const controlBoard = () => {
         masterCardDiv.appendChild(getPlacementDirControl());
         masterCardDiv.appendChild(getShipCount());
 
-        tileBoardCache = TileBoardCreator();
         tileBoardCache.createTileBoard();
         masterCardDiv.appendChild(tileBoardCache.getTileBoard());
 
@@ -31,8 +30,10 @@ const controlBoard = () => {
                 const value   = parseInt(noShips) - 1;
                 display.textContent = value.toString();
                 if (value === 0) {
-                    // make available a control for advancement
-                    document.querySelector("#flow-control");
+                    /*
+                     * Execute finished config callback
+                     */
+                    advCallback();
                 }
             }
         }
@@ -81,11 +82,15 @@ const controlBoard = () => {
         return buttonContainer;
     }
 
-    const getBoardView = () => {
-        
+    const randomizeBoard = () => {
+        tileBoardCache.randomize();
     }
 
-    return { createControlBoard };
+    const getBoardView = () => {
+        return tileBoardCache;
+    }
+
+    return { createControlBoard, randomizeBoard };
 }
 
 export default controlBoard;

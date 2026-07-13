@@ -3,15 +3,17 @@ import PlayerCard from '../player-card-ui/player-card-ui.js'
 
 const PlayerSelectionScreen = () => {
 
-    let rootPane = undefined;
+    let rootPane     = undefined;
+    let firstPlayer  = undefined;
+    let secondPlayer = undefined
 
     const getSelectionScrene = () => {
 
         const selectionScrene = document.createElement('div');
         selectionScrene.setAttribute('id', 'player-sel');
 
-        const firstPlayer  = PlayerCard().getFullDisplayCard("LEFT");
-        const secondPlayer = PlayerCard().getFullDisplayCard("RIGHT");
+        firstPlayer  = PlayerCard().getFullDisplayCard("LEFT");
+        secondPlayer = PlayerCard().getFullDisplayCard("RIGHT");
 
         selectionScrene.appendChild(firstPlayer);
         selectionScrene.appendChild(secondPlayer);
@@ -20,21 +22,25 @@ const PlayerSelectionScreen = () => {
         return selectionScrene;
     }
 
+    /*
+     * Retrieve information about both players
+     */ 
     const getPlayersInfo = () => {
-        let info = {};
-        // This should pass the info of the players
-        rootPane.childNodes.forEach(child => {
-            // Get selected player
-            const selPlayer = document.querySelector('.player-sel > .retention').textContent;
-            // Get the difficulty selection info
+        let info = [];
+        [firstPlayer, secondPlayer].forEach(child => {
+            const entry      = {};
+            const selPlayer  = child.querySelector('.player-type-sel .retention').textContent;
+            entry['player-type'] = selPlayer;
             if (selPlayer === 'CPU') {
-                const selDifficulty = document.querySelector('.diff-sel > .retention').textContent;
+                const selDifficulty = child.querySelector('.diff-sel .retention').textContent;
+                entry['difficulty']  = selDifficulty;
             }
+            info.push(entry);
         });
         return JSON.stringify(info);
     }
 
-    return { getSelectionScrene };
+    return { getSelectionScrene, getPlayersInfo };
 }
 
 export default PlayerSelectionScreen;

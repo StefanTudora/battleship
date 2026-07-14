@@ -7,13 +7,11 @@ class State {
         this.context = context;
     }
 
-    /** Meant to be overwritten */
+    /*
+     * Meant to be overwritten 
+     */
     doAction() {
-        try {
-            throw new Error('Executed undefined action');
-        } catch (error) {
-            console.log(error.message);
-        }
+        throw new Error('Executed undefined action');
     }
 }
 

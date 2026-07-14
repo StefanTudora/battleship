@@ -2,33 +2,37 @@ import './styles.css';
 import "@fontsource/orbitron";
 import "@fontsource/orbitron/400.css";
 
-import createCard from './ui/player-card-ui/player-card-ui.js';
-import createMDiv from './ui/ship-pl-master/ship-pl-master.js';
-import PlayerSelect from './ui/player-selection-ui/player-selection-ui.js'
+import PlayerSelect    from './ui/player-selection-ui/player-selection-ui.js'
+import MasterBoard     from './ui/board-config-ui/board-config-ui.js'
+import GameManagerView from './ui/game-ui-manager/game-ui-manager.js'
 
-import masterBoard from './ui/board-config-ui/board-config-ui.js'
+const rootView = document.querySelector("#op-sel");
 
-function createApp() {
-
-    // Find a suitable way to pass flow control
-    const container             = document.querySelector("#op-sel");
-    const playerSelectionScreen = PlayerSelect();
-    container.appendChild(playerSelectionScreen.getSelectionScrene());
-
-    document.querySelector("#start-game-button").addEventListener("click", (event) => {
-
-        const playersInfo = playerSelectionScreen.getPlayersInfo();
-
-        console.log(playersInfo);
-
-        const parentDiv = document.querySelector("#op-sel");
-        parentDiv.replaceChildren();
-        const controlBoard = masterBoard(playersInfo, undefined);
-        parentDiv.appendChild(controlBoard.getDisplay());
-
-        event.currentTarget.remove();
-    }); 
-
+const createPlayerSelectionView = () => {
+    /*
+     * Create the player selection UI
+     */
+    rootView.replaceChildren();
+    const playerSelectionView = PlayerSelect(createBoardPlacementView);
+    rootView.appendChild(playerSelectionView.getSelectionView());
 }
 
-createApp();
+const createBoardPlacementView = (playersInfo) => {
+    /*
+     * Create the board configuration UI
+     */
+    rootView.replaceChildren();
+    const controlBoardView = MasterBoard(playersInfo, createGameMatchView);
+    rootView.appendChild(controlBoardView.getDisplay());
+}
+
+const createGameMatchView = (configs) => {
+    /*
+     * Create the game session UI
+     */
+    rootView.replaceChildren();
+    const gameMatchView = GameManagerView(configs, createPlayerSelectionView);
+    rootView.appendChild(gameMatchView.getGameView());
+}
+
+createPlayerSelectionView();

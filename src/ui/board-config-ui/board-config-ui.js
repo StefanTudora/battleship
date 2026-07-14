@@ -1,8 +1,10 @@
 import BoardView from '../ship-pl-master/ship-pl-master.js';
 import './board-config-ui.css'
 
-// This is where the boards are being configured
-const boardConfig = (players, advanceCallback) => {
+/*
+ * Main View where the player boards are being configured
+ */ 
+const boardConfig = (players, advCallback) => {
 
     const viewList    = [];
     let currentIdx    = -1;
@@ -15,7 +17,7 @@ const boardConfig = (players, advanceCallback) => {
         playerList = JSON.parse(players);
 
         const display = document.createElement('div');
-        display.classList.add('ship-config');
+        display.classList.add('ship-config');   
         rootView = display;
         /*
          *  Create board for each players
@@ -32,9 +34,10 @@ const boardConfig = (players, advanceCallback) => {
      * In case of CPU player, the board is randomize the increment is called again
      */
     const renderView = () => {
+
         const currPlayer = playerList.at(currentIdx);
         const currBoard  = viewList.at(currentIdx);
-        console.log(currPlayer);
+
         if (currPlayer['player-type'] == 'CPU') {
             /*
              *  Randomize the board and increment automatically
@@ -42,7 +45,7 @@ const boardConfig = (players, advanceCallback) => {
             currBoard.randomizeBoard();
             increment();
         } else {
-            const currView = currBoard.createControlBoard();
+            const currView = currBoard.createControlBoard();// This is where the boards are being configured
             rootView.appendChild(currView);
         }
     }
@@ -57,9 +60,12 @@ const boardConfig = (players, advanceCallback) => {
             /*
              * Execute parent callback to advance the game
              */
-            passProxyBoardsToCPU();
-            advanceCallback();
+            executeCallbackAsync();
         }
+    }
+
+    const executeCallbackAsync = async () => {
+        advCallback(await getConfiguration());
     }
 
     const attachContinueButton = () => {
@@ -71,36 +77,45 @@ const boardConfig = (players, advanceCallback) => {
         rootView.appendChild(button);
     }
 
+    /*
+     * Get the proxy board of the opposing player;
+     * Applicable only for the CPU type players;
+     */
+    const getProxyForCurrentPlayer = (currentIdx) => {
+        const opposingPlayerIdx = (currentIdx + 1) & 0b1;
+        return viewList[opposingPlayerIdx].getBoardViewModelProxy();
+    }
+
     const saveConfiguration = () => {
         if (currentIdx < 0) {
             return;
         }
-        configs.push(createConfiguration());
+        configs.push(createConfiguration(currentIdx));
     }
 
     /*
-     * Create the player config
+     * Create the player config;
      */
-    const createConfiguration = async () => {
-        const currentPlayer = playerList.at(currentIdx);
-        const currentBoard  = viewList.at(currentIdx);
+    const createConfiguration = async (idx) => {
+        const currentPlayer = playerList.at(idx);
+        const currentBoard  = viewList.at(idx);
         let playerModel     = undefined;
         const playerImport  = await import(`../../model/game-entities/${currentPlayer['player-type'].toLowerCase()}-player.js`);
         const PlayerClass   = playerImport.default;
         if (currentPlayer['player-type'] == 'CPU') {
             /*
-             * Must also create the strategy for the CPU
+             * Must also create the strategy for the CPU;
              */
-            const strategy = await import(`../../model/cpu-strategy/${currentPlayer['difficulty'].toLowerCase()}-strategy.js`);
+            const strategy      = await import(`../../model/cpu-strategy/${currentPlayer['difficulty'].toLowerCase()}-strategy.js`);
             const StrategyClass = strategy.default;
-            
+
             /*
              *  Pass strategy to the CPU player type containing proxyBoard;
              */
-            playerModel = new PlayerClass(new StrategyClass(undefined));
+            playerModel = new PlayerClass(new StrategyClass(getProxyForCurrentPlayer(idx)));
         } else {
             /*
-             *  Human player do not require proxy, they interact directly with the board
+             *  Human player do not require proxy, they interact directly with the board;
              */
             playerModel = new PlayerClass();
         }
@@ -110,7 +125,18 @@ const boardConfig = (players, advanceCallback) => {
         }
     }
 
-    return { getDisplay };
+    /*
+     * Get the configured game session
+     */
+    const getConfiguration = async () => {
+        const resolvedConfigs = await Promise.all(configs);
+        return resolvedConfigs;
+    }
+
+    return { 
+        getDisplay,
+        getConfiguration,
+    };
 }
 
 export default boardConfig;

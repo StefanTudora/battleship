@@ -70,7 +70,6 @@ export default class GunnerStrategy extends NaiveStrategy {
     }
 
     visitCell(point) {
-        console.log("Visit for: " + point);
         this.visited[point[0]][point[1]] = true;
     }
 }

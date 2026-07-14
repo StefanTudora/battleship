@@ -1,8 +1,8 @@
 
 class GameManager {
 
-    constructor() {
-        // Intentionally left empty
+    constructor(state) {
+        this.state = state;
     }
 
     getState() {

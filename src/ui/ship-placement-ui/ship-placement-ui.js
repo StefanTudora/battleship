@@ -188,7 +188,7 @@ const boardView = () => {
      * Used in randomized placement. Either CPU or Player choice (add Randomize option for Human)
      */
     const randomize = () => {
-        for (const ship of ships) {
+        while(ships.length > 0) {
             let placed = false;
             do {
                 const [x, y] = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
@@ -202,12 +202,18 @@ const boardView = () => {
         }
     }
 
+    const getGameBoard = () => {
+        return gameBoard;
+    }
+
     return {
-        createTileBoard,
-        getTileBoard,
         attachSharedConfig,
+        createTileBoard,
         detachSharedConfig,
-        randomize
+        getProxyBoard,
+        getTileBoard,
+        randomize,
+        getGameBoard,
     };
 };
 

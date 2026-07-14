@@ -1,0 +1,54 @@
+
+.player-sel > p {
+    font-size: 4rem;
+    font-style: bold;
+    color: white;
+}
+
+.player-sel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10rem;
+}
+
+.player-sel {
+    display: grid;
+    grid-template-areas: 
+        "headline headline"
+        "first-player second-player"
+        "button button";
+    justify-content: center;
+    align-items: center;
+}
+
+.player-sel > p {
+    grid-area: headline;
+    text-align: center;
+}
+
+.player-sel > div:first-of-type {
+    grid-area: first-player;
+}
+
+.player-sel > div:last-of-type {
+    grid-area: second-player;
+}
+
+.player-sel > button {
+    grid-area: button;
+    width: fit-content;
+    justify-self: center;
+
+    font-size: 4rem;
+    border-radius: 0.5rem;
+    background-color: #2e383f;
+    color: white;
+    transition: 0.3s;
+}
+
+.player-sel > button:hover {
+    scale: 1.1;
+    background-color: #f9a828;
+}

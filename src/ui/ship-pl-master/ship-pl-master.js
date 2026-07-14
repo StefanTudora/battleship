@@ -77,7 +77,6 @@ const controlBoard = (advCallback) => {
              *  Shared state object used in the listeners of the board
              */
             shareConfig.direction = event.currentTarget.checked ? 'VERTICAL' : 'HORIZONTAL';
-            console.log(shareConfig.direction);
         });
         return buttonContainer;
     }
@@ -90,10 +89,15 @@ const controlBoard = (advCallback) => {
         return tileBoardCache;
     }
 
+    const getBoardViewModelProxy = () => {
+        return tileBoardCache.getProxyBoard();
+    }
+
     return { 
         createControlBoard, 
         randomizeBoard, 
-        getBoardView 
+        getBoardView,
+        getBoardViewModelProxy
     };
 }
 

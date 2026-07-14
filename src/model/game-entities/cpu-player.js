@@ -7,9 +7,9 @@ class CPUPlayer extends Player {
      * @gameBoard - of CPU
      * @strategy  - being used to play
      */
-    constructor(gameBoard, strategy) {
+    constructor(strategy, gameBoard) {
         super(gameBoard);
-        this.strategy   = strategy
+        this.strategy   = strategy;
         this.playerType = 'cpu';
     }
 

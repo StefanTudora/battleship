@@ -94,7 +94,6 @@ const createPlayerCardUI = () => {
 
     const setPlayerPortrait = (portraitAsset, imgElement) => {
         if (!portraitMap.has(portraitAsset)) {
-            console.log("Importing the image");
             new Promise((resolve, reject) => {
                 const charPortait = import(`../../assets/${portraitAsset}.png`);
                 if (charPortait !== undefined) {
@@ -113,45 +112,9 @@ const createPlayerCardUI = () => {
         }
     };
 
-    // Maybe it's worth moving somewhere else
-    const getPlayerModel = async () => {
-        // create the player model
-        const selectedPlayer = getTextContentOfRetention(displayCard.querySelector('player-type-sel'));
-        const playerType     = await import(`../../model/game-entities/${selectedPlayer}-player.js`);
-        const PlayerType     = playerType.default; 
-        if (selectedPlayer === 'CPU') {
-            let strategy     = undefined;
-            const difficulty = getTextContentOfRetention(displayCard.querySelector('diff-sel'));
-            switch (difficulty) {
-                // Make sure to change all this strategy names to make it easier to import
-                case 'Easy':
-                    strategy = await import('../../model/cpu-strategy/easy-strategy.js');
-                    break;
-                case 'Medium':
-                    strategy = await import('../../model/cpu-strategy/medium-strategy.js');
-                    break;
-                case 'Hard':
-                    strategy = await import('../../model/cpu-strategy/hard-strategy.js');
-                    break;
-            }
-            const Strategy = strategy.default;
-            // Modify the strategy to allow the board to be later attached
-            return new PlayerType(new Strategy());
-        } else {
-            return new PlayerType();
-        }
+    return { 
+        getFullDisplayCard,
     };
-
-    const getTextContentOfRetention = (parentElem) => {
-        for (const child of parentElem.childNodes) {
-            if (child.classList.contains('retention')) {
-                return child.textContent;
-            }
-        }
-        return undefined;
-    };
-
-    return { getFullDisplayCard };
 };
 
 export default createPlayerCardUI;

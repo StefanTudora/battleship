@@ -3,7 +3,7 @@ import "@fontsource/orbitron";
 import "@fontsource/orbitron/400.css";
 
 import createCard from './ui/player-card-ui/player-card-ui.js';
-import createMDiv from './ui/ship-pl-master.js';
+import createMDiv from './ui/ship-pl-master/ship-pl-master.js';
 import PlayerSelect from './ui/player-selection-ui/player-selection-ui.js'
 
 import masterBoard from './ui/board-config-ui/board-config-ui.js'

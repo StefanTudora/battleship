@@ -1,4 +1,4 @@
-import TileBoardCreator from './ship-placement-ui.js';
+import TileBoardCreator from '../ship-placement-ui/ship-placement-ui.js';
 import './ship-pl-master.css';
 
 /*
@@ -90,7 +90,11 @@ const controlBoard = (advCallback) => {
         return tileBoardCache;
     }
 
-    return { createControlBoard, randomizeBoard };
+    return { 
+        createControlBoard, 
+        randomizeBoard, 
+        getBoardView 
+    };
 }
 
 export default controlBoard;

@@ -1,6 +1,6 @@
 import { CheckState } from './check-state.js';
 import { State } from './base-state.js';
-import { CPUPlayer } from '../model/cpu-player.js';
+import { CPUPlayer } from '../game-entities/cpu-player.js';
 
 class PlayerState extends State {
 

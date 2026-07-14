@@ -1,4 +1,4 @@
-import { BoardProxy } from "../model/board-proxy.js";
+import { BoardProxy } from "../game-entities/board-proxy.js";
 
 /*
  * Base CPU strategy

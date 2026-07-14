@@ -1,5 +1,5 @@
-import { BoardProxy } from '../model/board-proxy.js';
-import { GameBoard } from '../model/gameboard.js';
+import { BoardProxy } from '../../model/game-entities/board-proxy.js';
+import { GameBoard } from '../../model/game-entities/gameboard.js';
 import './ship-placement-style.css'
 
 /*

@@ -1,4 +1,4 @@
-import BoardView from '../ship-pl-master.js';
+import BoardView from '../ship-pl-master/ship-pl-master.js';
 import './board-config-ui.css'
 
 // This is where the boards are being configured
@@ -8,6 +8,7 @@ const boardConfig = (players, advanceCallback) => {
     let currentIdx    = -1;
     let playerList    = [];
     let rootView      = undefined;
+    const configs     = [];
 
     const getDisplay = () => {
 
@@ -71,7 +72,42 @@ const boardConfig = (players, advanceCallback) => {
     }
 
     const saveConfiguration = () => {
+        if (currentIdx < 0) {
+            return;
+        }
+        configs.push(createConfiguration());
+    }
 
+    /*
+     * Create the player config
+     */
+    const createConfiguration = async () => {
+        const currentPlayer = playerList.at(currentIdx);
+        const currentBoard  = viewList.at(currentIdx);
+        let playerModel     = undefined;
+        const playerImport  = await import(`../../model/game-entities/${currentPlayer['player-type'].toLowerCase()}-player.js`);
+        const PlayerClass   = playerImport.default;
+        if (currentPlayer['player-type'] == 'CPU') {
+            /*
+             * Must also create the strategy for the CPU
+             */
+            const strategy = await import(`../../model/cpu-strategy/${currentPlayer['difficulty'].toLowerCase()}-strategy.js`);
+            const StrategyClass = strategy.default;
+            
+            /*
+             *  Pass strategy to the CPU player type containing proxyBoard;
+             */
+            playerModel = new PlayerClass(new StrategyClass(undefined));
+        } else {
+            /*
+             *  Human player do not require proxy, they interact directly with the board
+             */
+            playerModel = new PlayerClass();
+        }
+        return {
+            player: playerModel,
+            board: currentBoard.getBoardView(),
+        }
     }
 
     return { getDisplay };

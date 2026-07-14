@@ -117,7 +117,7 @@ const createPlayerCardUI = () => {
     const getPlayerModel = async () => {
         // create the player model
         const selectedPlayer = getTextContentOfRetention(displayCard.querySelector('player-type-sel'));
-        const playerType     = await import(`../../model/${selectedPlayer}-player.js`);
+        const playerType     = await import(`../../model/game-entities/${selectedPlayer}-player.js`);
         const PlayerType     = playerType.default; 
         if (selectedPlayer === 'CPU') {
             let strategy     = undefined;
@@ -125,13 +125,13 @@ const createPlayerCardUI = () => {
             switch (difficulty) {
                 // Make sure to change all this strategy names to make it easier to import
                 case 'Easy':
-                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    strategy = await import('../../model/cpu-strategy/easy-strategy.js');
                     break;
                 case 'Medium':
-                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    strategy = await import('../../model/cpu-strategy/medium-strategy.js');
                     break;
                 case 'Hard':
-                    strategy = await import('../../cpu-strategy/naive-strategy.js');
+                    strategy = await import('../../model/cpu-strategy/hard-strategy.js');
                     break;
             }
             const Strategy = strategy.default;

@@ -1,4 +1,4 @@
-import NaiveStrategy from './naive-strategy.js'
+import NaiveStrategy from './easy-strategy.js'
 
 /*
  * Gunner CPU strategy used in Medium mode

@@ -1,4 +1,4 @@
-import GunnerStrategy from "./gunner-strategy.js";
+import GunnerStrategy from "./medium-strategy.js";
 
 
 export default class SeasonedGunner extends GunnerStrategy {

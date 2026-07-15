@@ -8,6 +8,7 @@ const controlBoard = (advCallback) => {
 
     let shareConfig    = undefined;
     let tileBoardCache = TileBoardCreator();
+    let rootView       = undefined
 
     const createControlBoard = () => {
 
@@ -40,8 +41,12 @@ const controlBoard = (advCallback) => {
 
         tileBoardCache.attachSharedConfig(shareConfig);
 
-        return masterCardDiv;
+        rootView = masterCardDiv;
     };
+
+    const getControlBoard = () => {
+        return rootView;
+    }
 
     const getShipCount = () => {
         const div = document.createElement('div');
@@ -94,10 +99,11 @@ const controlBoard = (advCallback) => {
     }
 
     return { 
-        createControlBoard, 
-        randomizeBoard, 
+        createControlBoard,
         getBoardView,
-        getBoardViewModelProxy
+        getBoardViewModelProxy,
+        getControlBoard,
+        randomizeBoard,
     };
 }
 

@@ -1,0 +1,94 @@
+
+.game-view {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10rem;
+    animation: slideFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.game-view > div {
+    transition: 0.3s ease-in-out;
+}
+
+.attackable > div:hover {
+    background-color: rgb(173, 173, 173);
+}
+
+.zoom {
+    scale: 1.1;
+}
+
+.playerPresControl {
+    display: none;
+}
+
+.playerToggle {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: fit-content;
+    border: 3px solid rgb(0, 0, 0, 0.7);
+    border-radius: 2rem;
+    background: rgb(77, 1, 1);
+    font-weight: bold;
+    color: rgb(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+.playerToggle::before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0%;
+    border-radius: 2rem;
+    background: rgb(125, 221, 130);
+    transition: all 0.3s;
+}
+
+.playerToggle div {
+    padding: 6px;
+    text-align: center;
+    z-index: 1;
+    height: 7.5rem;
+    width: 15rem;
+
+    font-size: 2rem;
+}
+
+.playerPresControl:checked+.playerToggle::before {
+    left: 50%;
+}
+
+.playerPresControl:checked+.playerToggle div:first-child {
+    color: white;
+    transition: color 0.3s;
+}
+
+.playerPresControl:checked+.playerToggle div:last-child {
+    color: rgb(0, 0, 0, 0.7);
+    transition: color 0.3s;
+}
+
+.playerPresControl+.playerToggle div:first-child {
+    color: rgb(0, 0, 0, 0.7);
+    transition: color 0.3s;
+}
+
+.playerPresControl+.playerToggle div:last-child {
+    color: white;
+    transition: color 0.3s;
+}

@@ -38,6 +38,8 @@ const boardConfig = (players, advCallback) => {
         const currPlayer = playerList.at(currentIdx);
         const currBoard  = viewList.at(currentIdx);
 
+        currBoard.createControlBoard();
+
         if (currPlayer['player-type'] == 'CPU') {
             /*
              *  Randomize the board and increment automatically
@@ -45,8 +47,7 @@ const boardConfig = (players, advCallback) => {
             currBoard.randomizeBoard();
             increment();
         } else {
-            const currView = currBoard.createControlBoard();// This is where the boards are being configured
-            rootView.appendChild(currView);
+            rootView.appendChild(currBoard.getControlBoard());
         }
     }
 
@@ -74,7 +75,29 @@ const boardConfig = (players, advCallback) => {
         button.addEventListener('click', () => {
             increment();
         });
+
+        const currentView   = rootView.querySelector('div:first-of-type');
+        const currentBounds = currentView.getBoundingClientRect();
+
         rootView.appendChild(button);
+
+        const newBounds = currentView.getBoundingClientRect();
+        
+        const dx = currentBounds.left - newBounds.left;
+        const dy = currentBounds.top  - newBounds.top;
+
+        currentView.animate([
+            {
+                transform: `translate(${dx}px, ${dy}px)`
+            },
+            {
+                transform: 'translate(0, 0)'
+            }
+        ], {
+            duration: 400,
+            easing: 'ease-in-out',
+            fill: 'both'
+        });
     }
 
     /*
@@ -115,7 +138,7 @@ const boardConfig = (players, advCallback) => {
             playerModel = new PlayerClass(new StrategyClass(getProxyForCurrentPlayer(idx)));
         } else {
             /*
-             *  Human player do not require proxy, they interact directly with the board;
+             *  Human player do not require proxy/strategy, they interact directly with the board;
              */
             playerModel = new PlayerClass();
         }
@@ -130,6 +153,13 @@ const boardConfig = (players, advCallback) => {
      */
     const getConfiguration = async () => {
         const resolvedConfigs = await Promise.all(configs);
+        for (const config of resolvedConfigs) {
+            /*
+             * Clear all links to the control board
+             * Clean the applied style classes
+             */
+            config.board.clearAllCellsOfStyle();
+        }
         return resolvedConfigs;
     }
 

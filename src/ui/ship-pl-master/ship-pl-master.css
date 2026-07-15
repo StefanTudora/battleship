@@ -9,7 +9,8 @@
     justify-content: space-between;
     align-items: center;
     gap: 0px 1rem 0px 1rem;
-    
+
+    transition: 0.4s;
 }
 
 .master-div > p:first-of-type {

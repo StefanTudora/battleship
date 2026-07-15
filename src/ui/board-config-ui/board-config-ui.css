@@ -1,10 +1,14 @@
+
 .ship-config {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     gap: 5rem;
+}
+
+.ship-config > div:first-of-type {
+    animation: slideFadeIn 0.4s ease-out forwards;
 }
 
 .ship-config > button {
@@ -13,9 +17,21 @@
     background-color: #2e383f;
     color: white;
     transition: 0.3s;
+    animation: slideFadeIn 0.4s ease-out forwards;
 }
 
-.ship-config> button:hover {
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ship-config > button:hover {
     scale: 1.1;
     background-color: #f9a828;
 }

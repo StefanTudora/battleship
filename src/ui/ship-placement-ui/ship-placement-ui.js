@@ -147,6 +147,7 @@ const boardView = () => {
             if (ships.length === 0) {
                 // No more ships to place, avoid undefined behaviour
                 detachCellListeners();
+                detachSharedConfig();
             }
         }
     }
@@ -172,17 +173,26 @@ const boardView = () => {
 
     const detachSharedConfig = () => {
         // detach from the shared object with the parent, no longer needed
-        this.sharedConfig = null;
+        sharedConfig = null;
     }
 
     const detachCellListeners = () => {
         tileBoard.childNodes.forEach(cell => {
-            // Remove parasitic valid classList for last added element
-            cell.classList.remove('valid');
-            // Replace with cloned element
+            /*
+             * Discard listeners completely
+             */
             cell.replaceWith(cell.cloneNode(true));
-        })
+        });
     }
+
+    const clearAllCellsOfStyle = () => {
+        tileBoard.childNodes.forEach(cell => {
+            /*
+             * Remove classes used during the ship placement flow
+             */
+            cell.classList.remove('valid', 'invalid', 'space', 'placement');
+        });
+    };
 
     /*
      * Used in randomized placement. Either CPU or Player choice (add Randomize option for Human)
@@ -208,7 +218,9 @@ const boardView = () => {
 
     return {
         attachSharedConfig,
+        clearAllCellsOfStyle,
         createTileBoard,
+        detachCellListeners,
         detachSharedConfig,
         getProxyBoard,
         getTileBoard,

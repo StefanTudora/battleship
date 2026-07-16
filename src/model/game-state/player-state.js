@@ -1,6 +1,6 @@
 import { CheckState } from './check-state.js';
 import { State } from './base-state.js';
-import { CPUPlayer } from '../game-entities/cpu-player.js';
+import CPUPlayer from '../game-entities/cpu-player.js';
 
 class PlayerState extends State {
 
@@ -8,11 +8,12 @@ class PlayerState extends State {
         super(context);
     }
 
-    doAction() {
+    async doAction() {
         const activePlayer = this.context.getActivePlayer();
 
         if (activePlayer instanceof CPUPlayer) {
-            activePlayer.attackBoard();
+            const move = await activePlayer.attackBoard();
+            this.context.updateBoard(...move);
         } else {
             // Break the FSM execution and wait for a human player to resume the game;
             return undefined;
@@ -22,4 +23,4 @@ class PlayerState extends State {
     }
 }
 
-export { PlayerState };
+export default PlayerState;

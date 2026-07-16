@@ -1,4 +1,4 @@
-import { PlayerState } from './player-state.js'
+import PlayerState from './player-state.js'
 import { FinalState } from './final-state.js'
 import { State } from './base-state.js';
 

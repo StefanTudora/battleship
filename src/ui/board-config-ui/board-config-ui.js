@@ -125,6 +125,7 @@ const boardConfig = (players, advCallback) => {
         let playerModel     = undefined;
         const playerImport  = await import(`../../model/game-entities/${currentPlayer['player-type'].toLowerCase()}-player.js`);
         const PlayerClass   = playerImport.default;
+        const proxyBoard    = getProxyForCurrentPlayer(idx);
         if (currentPlayer['player-type'] == 'CPU') {
             /*
              * Must also create the strategy for the CPU;
@@ -135,12 +136,12 @@ const boardConfig = (players, advCallback) => {
             /*
              *  Pass strategy to the CPU player type containing proxyBoard;
              */
-            playerModel = new PlayerClass(new StrategyClass(getProxyForCurrentPlayer(idx)));
+            playerModel = new PlayerClass(new StrategyClass(proxyBoard), proxyBoard);
         } else {
             /*
              *  Human player do not require proxy/strategy, they interact directly with the board;
              */
-            playerModel = new PlayerClass();
+            playerModel = new PlayerClass(proxyBoard);
         }
         return {
             player: playerModel,

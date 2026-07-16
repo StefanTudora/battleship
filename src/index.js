@@ -33,6 +33,7 @@ const createGameMatchView = (configs) => {
     rootView.replaceChildren();
     const gameMatchView = GameManagerView(configs, createPlayerSelectionView);
     rootView.appendChild(gameMatchView.getGameView());
+    gameMatchView.playGame();
 }
 
 createPlayerSelectionView();

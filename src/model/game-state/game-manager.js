@@ -1,8 +1,11 @@
 
 class GameManager {
 
-    constructor(state) {
-        this.state = state;
+    #context;
+
+    constructor(state, context) {
+        this.state   = state;
+        this.context = context;
     }
 
     getState() {
@@ -17,9 +20,17 @@ class GameManager {
         // Implement when done
     }
 
+    getContext() {
+        return this.context;
+    }
+
     playGameDev() {
-        this.setState(this.state.doAction());
+        const nextState = this.state.doAction();
+        if (nextState && typeof nextState.then === 'function') {
+            return nextState.then(resolved => this.setState(resolved));
+        }
+        this.setState(nextState);
     }
 }
 
-export { GameManager };
+export default GameManager;

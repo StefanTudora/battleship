@@ -42,7 +42,9 @@ export default class NaiveStrategy extends BaseStrategy {
     /*
      * Pop from the randomly shuffled array the last entry and return for attack
      */
-    executeStrategy() {
-        this.observableBoard.receiveAttack(getBestPointToAttack());
+    execute() {
+        const point = this.getBestPointToAttack();
+        this.observableBoard.receiveAttack(point);
+        return point;
     }
 }

@@ -17,8 +17,9 @@ export default class BaseStrategy {
      * Inefficient base implementation, prone to missfire
      * Meant to be overriden
      */
-    executeStrategy() {
+    execute() {
         const point = [Math.floor(Math.random() * this.rows), Math.floor(Math.random() * this.cols)];
         this.observableBoard.receiveAttack(point);
+        return point;
     }
 }

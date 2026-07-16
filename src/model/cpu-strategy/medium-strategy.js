@@ -17,7 +17,7 @@ export default class GunnerStrategy extends NaiveStrategy {
         this.visited = Array.from({ length: this.rows }, () => Array(this.cols).fill(false));
     }
 
-    executeStrategy() {
+    execute() {
         let attackCoord = [-1, -1];
         if (this.searchPoints.length !== 0) {
             // We have coordinates of a knwon enemy vessel
@@ -45,6 +45,7 @@ export default class GunnerStrategy extends NaiveStrategy {
                 // Nothing to do here
                 break;
         }
+        return attackCoord;
     }
 
     calibrateTargetingSystem(attackCoord) {

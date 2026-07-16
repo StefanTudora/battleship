@@ -1,23 +1,31 @@
 import './game-ui-manager.css'
-// import GameManager from '../../model/game-state/game-manager';
+import GameManager from '../../model/game-state/game-manager.js';
+import PlayerState from '../../model/game-state/player-state.js';
+import { CheckState } from '../../model/game-state/check-state.js';
 
 /*
  * Game session UI
  */
 const GameManagerView = (gameConfigs, advCallback) => {
 
-    let rootView = undefined;
+    let rootView    = undefined;
+    let gameManager = new GameManager(); 
 
     const getGameView = () => {
 
         const gameView = document.createElement('div');
         gameView.classList.add('game-view');
 
+        // Encapsulate the boards in divs with player display messages
         gameView.append(gameConfigs[0].board.getTileBoard());
         gameView.append(getPlayerControlDisplay());
         gameView.append(gameConfigs[1].board.getTileBoard());
 
         rootView = gameView;
+
+        const context = getContext([gameConfigs[0].player, gameConfigs[1].player]);
+
+        gameManager.setState(new PlayerState(context), context);
 
         gameView.querySelector('.game-view > div:last-of-type').classList.add('zoom', 'attackable');
 
@@ -60,19 +68,73 @@ const GameManagerView = (gameConfigs, advCallback) => {
 
             active.classList.add('zoom', 'attackable');
             active.childNodes.forEach(cell => {
-                cell.addEventListener('click', () => {
-                    console.log(`(${cell.dataset.row}, ${cell.dataset.col})`);
+                cell.addEventListener('click', (event) => {
+                    const target = event.currentTarget;
+                    console.log(`Cell at : (${target.dataset.row}, ${target.dataset.col})`);
+                    target.classList.add('red-bkg');
+
+                    /*
+                     * The current active player is a Human, we need to resume the FSM execution
+                     */
+                    if (gameManager.getState() === undefined) {
+                        gameManager.setState(new CheckState(gameManager.getContext()));
+                    }
                 });
             });
         });
         return buttonContainer;
     }
 
+    /*
+     * Play the session
+     * Used to resume in case the game waits for human actions;
+     */
+    const playGame = async () => {
+        while (gameManager.getState() !== undefined) {
+            await gameManager.playGameDev();
+        }
+    }
 
-    // const attachControl
+    /*
+     * Create context used by the game-manager
+     */
+    const getContext = (players) => {
+        return {
+            activePlayer:  players[0],
+            waitingPlayer: players[1],
+            updateBoard: getUpdateCallBack,
+
+            getActivePlayer() {
+                return this.activePlayer;
+            },
+
+            getWaitingPlayer() {
+                return this.waitingPlayer;
+            },
+
+            switchControl() {
+                [this.activePlayer, this.waitingPlayer] = [this.waitingPlayer, this.activePlayer];
+                rootView.querySelector('#playerPresControl').click();
+            },
+
+            updateAttackableBoard(x, y) {
+                updateBoard(x, y);
+            }
+            
+        }
+    }
+
+    const getUpdateCallBack = (x, y) => {
+        if (x === undefined || y === undefined) {
+            return;
+        }
+        const cell = rootView.querySelector(`.attackable > div[data-row='${x}'][data-col='${y}']`);
+        cell.click();
+    }
 
     return {
         getGameView,
+        playGame,
     }
 }
 

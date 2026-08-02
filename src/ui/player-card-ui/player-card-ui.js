@@ -25,7 +25,7 @@ const createPlayerCardUI = () => {
         const playerSelectionDiv = document.createElement("div");
         playerSelectionDiv.classList.add("player-type-sel");
         playerSelectionDiv.innerHTML = `
-                <p>Choose Player<p>
+                <p>Choose Player</p>
                 <button>Human</button>
                 <button>CPU</button>
             `;

@@ -58,7 +58,7 @@ const controlBoard = (advCallback) => {
         div.appendChild(msg);
         div.appendChild(cnt);
 
-        msg.textContent = "Renaining Ships :";
+        msg.textContent = "Remaining Ships :";
         cnt.textContent = "5";
 
         return div;

@@ -1,6 +1,6 @@
 
 .player-sel > p {
-    font-size: 4rem;
+    font-size: 3rem;
     font-style: bold;
     color: white;
 }
@@ -26,6 +26,7 @@
     align-items: center;
     gap: 10rem;
     animation: slideFadeIn 0.4s ease-out forwards;
+    gap: 7.5rem;
 }
 
 .player-sel > p {
@@ -46,7 +47,7 @@
     width: fit-content;
     justify-self: center;
 
-    font-size: 4rem;
+    font-size: 3rem;
     border-radius: 0.5rem;
     background-color: #2e383f;
     color: white;

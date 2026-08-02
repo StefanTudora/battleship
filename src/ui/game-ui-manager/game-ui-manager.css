@@ -13,7 +13,7 @@
         "first-player control second-player";
     justify-content: center;
     align-items: center;
-    gap: 10rem;
+    gap: 6rem;
     animation: slideFadeIn 0.4s ease-out forwards;
 } 
 
@@ -85,10 +85,10 @@ game-view > div:last-of-type {
     padding: 6px;
     text-align: center;
     z-index: 1;
-    height: 7.5rem;
-    width: 15rem;
+    height: 4rem;
+    width: 10rem;
 
-    font-size: 2rem;
+    font-size: 1.25rem;
 }
 
 .playerPresControl:checked+.playerToggle::before {
@@ -136,7 +136,7 @@ game-view > div:last-of-type {
 }
 
 .root-view > button {
-    font-size: 4rem;
+    font-size: 2rem;
     border-radius: 0.5rem;
     background-color: #2e383f;
     color: white;

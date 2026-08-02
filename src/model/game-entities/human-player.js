@@ -26,7 +26,7 @@ class HumanPlayer extends Player {
         /*
          *  Attack the board 
          */
-        const state = this.board.receiveAttack(point);
+        const [state, _] = this.board.receiveAttack(point);
 
         const solver = this._solver;
         this._solver = undefined;

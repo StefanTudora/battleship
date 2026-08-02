@@ -5,18 +5,18 @@
         "player-pres player-pres"
         "button-control ship-count"
         "board board";
-    width: 50rem;
+    width: 40rem;
+    height: 40rem;
     justify-content: space-between;
     align-items: center;
-    gap: 0px 1rem 0px 1rem;
-
+    gap: 1rem 1rem 1rem 1rem;
     transition: 0.4s;
 }
 
 .master-div > p:first-of-type {
     grid-area: player-pres;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: white;
 }
 
@@ -40,7 +40,7 @@
     justify-content: center;
     align-items: center;
 
-    font-size: 1.75rem;
+    font-size: 1.5rem;
 }
 
 .toggleCheckbox {
@@ -52,7 +52,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     width: fit-content;
-    border: 3px solid rgb(0, 0, 0, 0.7);
+    border: 2px solid rgb(0, 0, 0, 0.7);
     border-radius: 20px;
     background: rgb(0, 0, 0, 0.7);
     font-weight: bold;

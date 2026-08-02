@@ -41,7 +41,7 @@ export default class NaiveStrategy extends BaseStrategy {
         let point = [-1, -1];
         do {
             point = this.coordinates.pop();
-        } while (visted[point[0]][point[1]] == true);
+        } while (this.visited[point[0]][point[1]] == true);
         return point;
     }
 
@@ -59,10 +59,13 @@ export default class NaiveStrategy extends BaseStrategy {
 
     adapt(points) {
         /*
-         *  Used to mark multiple points in the strategy in case a target was sunk
+         *  CPU strategy must adapt to points we can no longer hit.
+         *  Use-case: a ship is sunk and we know there is nothing to hit near it
          */
         for (const point of points) {
             this.visited[point[0]][point[1]] = true;
         }
+
+        this.observableBoard.prettyPrintBoard();
     }
 }

@@ -91,10 +91,10 @@ class GameBoard {
             } else {
                 status = "Hit";
             }
-        }
-        this.#shipPlacement[point[0]][point[1]] = -1;
-        if (status == "Sunk") {
-            border = this.#getBorderFromPoint(point);
+            this.#shipPlacement[point[0]][point[1]] = -1;
+            if (status == "Sunk") {
+                border = this.#getBorderFromPoint(point);
+            }
         }
         return [status, border];
     }
@@ -103,10 +103,17 @@ class GameBoard {
         const disp        = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
         const searchQueue = [];
         const wreckage    = [];
+        const wreckageSet = new Set();
+
+        const encode = (x, y) => `${x},${y}`;
+        const decode = (key) => key.split(',').map(Number);
+
+        this.#shipPlacement[point[0]][point[1]] = 0;
         searchQueue.push(point);
+        wreckageSet.add(encode(point[0], point[1]));
+
         while (searchQueue.length > 0) {
             const currPnt = searchQueue.shift();
-            this.#shipPlacement[currPnt[0]][currPnt[1]] = 0;
             wreckage.push(currPnt);
             for (let idx = 0; idx < 8; ++idx) {
                 const dx = currPnt[0] + disp[idx][0];
@@ -114,28 +121,29 @@ class GameBoard {
                 if (Math.min(dx, dy) < 0 || Math.max(dx, dy) >= 10 || this.#shipPlacement[dx][dy] != -1) {
                     continue;
                 }
+                this.#shipPlacement[dx][dy] = 0;
                 searchQueue.push([dx, dy]);
+                wreckageSet.add(encode(dx, dy));
             }
         }
-        const wreckagetSet = new Set(wreckage);
-        const borderSet    = new Set();
-        for (const sunkPoint of wreckagetSet) {
+
+        const borderSet = new Set();
+        for (const sunkPoint of wreckage) {
             for (let idx = 0; idx < 8; ++idx) {
                 const dx = sunkPoint[0] + disp[idx][0];
                 const dy = sunkPoint[1] + disp[idx][1];
                 if (Math.min(dx, dy) < 0 || Math.max(dx, dy) >= 10) {
                     continue;
                 }
-                if (wreckagetSet.has([dx, dy])) {
-                    /*
-                     *  Avoid marking the sunk ship as border;
-                     */
+                const key = encode(dx, dy);
+                if (wreckageSet.has(key) || borderSet.has(key)) {
                     continue;
                 }
-                borderSet.add([dx, dy]);
+                borderSet.add(key);
             }
         }
-        return borderSet;
+
+        return new Set(Array.from(borderSet, decode));
     }
 
     /*
@@ -155,7 +163,7 @@ class GameBoard {
     /*
      * Pretty display of the board
      */
-    #prettyPrintBoard() {
+    prettyPrintBoard() {
         console.log('\n   ' + Array.from({length: this.#shipPlacement[0].length}, (_, i) => i).join(' '));
         console.log('  ' + Array.from({length: 2 * this.#shipPlacement[0].length}, () => '─').join('') + '─');
         for (let idx = 0; idx < this.#shipPlacement.length; idx++) {

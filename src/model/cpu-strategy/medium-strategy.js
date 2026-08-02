@@ -19,13 +19,17 @@ export default class GunnerStrategy extends NaiveStrategy {
     getBestPointToAttack() {
         let point = [-1, -1];
         if (this.searchPoints.length !== 0) {
-            // We have coordinates of a knwon enemy vessel
+            /*
+             * We have coordinates of a knwon enemy vessel
+             */
             point = this.searchPoints.shift();
         } else {
             while (this.coordinates.length > 0) {
                 point = this.coordinates.pop();
                 if (this.wasPointVisited(point) == false) {
-                    // Skip all points that have been explored;
+                    /*
+                     * Skip all points that have been explored;
+                     */
                     break;
                 }
             }
@@ -76,6 +80,9 @@ export default class GunnerStrategy extends NaiveStrategy {
     }
 
     visitCell(point) {
+        if(point[0] == -1) {
+            console.log("Found it!");
+        }
         this.visited[point[0]][point[1]] = true;
     }
 }

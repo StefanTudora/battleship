@@ -10,6 +10,7 @@ const GameManagerView = (gameConfigs, advCallback) => {
 
     let rootView    = undefined;
     let gameManager = undefined;
+    let context     = undefined;
 
     const getGameView = () => {
 
@@ -19,8 +20,8 @@ const GameManagerView = (gameConfigs, advCallback) => {
         const gameView = document.createElement('div');
         gameView.classList.add('game-view');
 
-        const context = getContext([gameConfigs[0].player, gameConfigs[1].player]);
-        gameManager   = new GameManager(new PlayerState(context), context);
+        context     = getContext([gameConfigs[0].player, gameConfigs[1].player]);
+        gameManager = new GameManager(new PlayerState(context), context);
 
         gameView.append(gameConfigs[0].board.getTileBoard());
         const presenterDisplay = getPlayerControlDisplay();
@@ -109,6 +110,7 @@ const GameManagerView = (gameConfigs, advCallback) => {
         return {
             activePlayer:  players[0],
             waitingPlayer: players[1],
+            playerList: players,
             updateBoard: getUpdateCallBack,
             resetCallback: updateEndGame,
 
@@ -234,6 +236,14 @@ const GameManagerView = (gameConfigs, advCallback) => {
             easing: 'ease-in-out',
             fill: 'both'
         });
+
+        let msg = "";
+        if (context.activePlayer == context.playerList[0]) {
+            msg = "First Player wins!";
+        } else {
+            msg = "Second Player Wins!";
+        }
+        alert(msg);
     }
 
     return {

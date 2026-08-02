@@ -145,7 +145,10 @@ const boardView = () => {
             }
 
             if (ships.length === 0) {
-                // No more ships to place, avoid undefined behaviour
+                /*
+                 * No more ships to place, avoid undefined behaviour
+                 */ 
+                clearAllCellsOfProvidedStyle('valid');
                 detachCellListeners();
                 detachSharedConfig();
             }
@@ -193,6 +196,15 @@ const boardView = () => {
             cell.classList.remove('valid', 'invalid', 'space', 'placement');
         });
     };
+
+    const clearAllCellsOfProvidedStyle = (style) => {
+        tileBoard.childNodes.forEach(cell => {
+            /*
+             * Remove classes used during advancement callback
+             */
+            cell.classList.remove(style);
+        });
+    }
 
     /*
      * Used in randomized placement. Either CPU or Player choice (add Randomize option for Human)

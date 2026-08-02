@@ -10,15 +10,13 @@ class PlayerState extends State {
 
     async doAction() {
         const activePlayer = this.context.getActivePlayer();
-
-        if (activePlayer instanceof CPUPlayer) {
-            const move = await activePlayer.attackBoard();
-            this.context.updateBoard(...move);
-        } else {
-            // Break the FSM execution and wait for a human player to resume the game;
-            return undefined;
+        const [move, state] = await activePlayer.attackBoard();
+        
+        if (move === undefined || state === undefined) {
+            return;
         }
         
+        this.context.updateBoard(move, state);
         return new CheckState(this.context);
     }
 }

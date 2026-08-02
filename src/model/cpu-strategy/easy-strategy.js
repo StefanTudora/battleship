@@ -12,6 +12,7 @@ export default class NaiveStrategy extends BaseStrategy {
         // Create array containing all coordinates found on board
         this.initPoints();
         this.shufflePoints();
+        this.visited = Array.from({ length: this.rows }, () => Array(this.cols).fill(false));
     }
 
     initPoints() {
@@ -23,7 +24,9 @@ export default class NaiveStrategy extends BaseStrategy {
     }
 
     shufflePoints() {
-        // Use Fisher-Yates to shuffle the points
+        /*
+         * Use Fisher-Yates to shuffle the points
+         */
         for (let idx = this.coordinates.length - 1; idx >= 0; --idx) {
             const swapIdx = Math.floor(Math.random() * (idx + 1));
             if (idx == swapIdx) {
@@ -35,7 +38,10 @@ export default class NaiveStrategy extends BaseStrategy {
     }
 
     getBestPointToAttack() {
-        const point = this.coordinates.pop();
+        let point = [-1, -1];
+        do {
+            point = this.coordinates.pop();
+        } while (visted[point[0]][point[1]] == true);
         return point;
     }
 
@@ -44,7 +50,19 @@ export default class NaiveStrategy extends BaseStrategy {
      */
     execute() {
         const point = this.getBestPointToAttack();
-        this.observableBoard.receiveAttack(point);
-        return point;
+        const [state, border] = this.observableBoard.receiveAttack(point);
+        if (border !== null) {
+            this.adapt(border);
+        }
+        return [point, state];
+    }
+
+    adapt(points) {
+        /*
+         *  Used to mark multiple points in the strategy in case a target was sunk
+         */
+        for (const point of points) {
+            this.visited[point[0]][point[1]] = true;
+        }
     }
 }

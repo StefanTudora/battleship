@@ -9,18 +9,17 @@ class CPUPlayer extends Player {
      * @gameBoard - of CPU
      * @strategy  - being used to play
      */
-    constructor(strategy, gameBoard) {
+    constructor(gameBoard, strategy) {
         super(gameBoard);
         this.strategy   = strategy;
         this.playerType = 'cpu';
     }
 
     async attackBoard() {
-        
         await this.delay(650);
-        const result = this.strategy.execute();
-        await this.delay(350);
-        return result;
+        const pointStatePair = this.strategy.execute();
+        await this.delay(650);
+        return pointStatePair;
     }
 }
 

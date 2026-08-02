@@ -77,18 +77,65 @@ class GameBoard {
      * @param {point} - to process
      */
     receiveAttack(point) {
-        // Augment the method to let the player know the ship was sunk;
+        let status = null;
+        let border = null;
         if (this.#shipPlacement[point[0]][point[1]] == 0) {
-            return "Miss";
+            status = "Miss";
+        } else {
+            const currentShip = this.#getShipFromRegistryByCoord(point);
+            currentShip.hit();
+            if (currentShip.isSunk()) {
+                // remove from the shipRegistry
+                this.#shipRegistry.delete(this.#shipPlacement[point[0]][point[1]]);
+                status = "Sunk";
+            } else {
+                status = "Hit";
+            }
         }
-        const currentShip = this.#getShipFromRegistryByCoord(point);
-        currentShip.hit();
-        if (currentShip.isSunk()) {
-            // remove from the shipRegistry
-            this.#shipRegistry.delete(this.#shipPlacement[point[0]][point[1]]);
+        this.#shipPlacement[point[0]][point[1]] = -1;
+        if (status == "Sunk") {
+            border = this.#getBorderFromPoint(point);
         }
-        this.#shipPlacement[point[0]][point[1]] = 0;
-        return "Hit";
+        return [status, border];
+    }
+
+    #getBorderFromPoint(point) {
+        const disp        = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+        const searchQueue = [];
+        const wreckage    = [];
+        searchQueue.push(point);
+        while (searchQueue.length > 0) {
+            const currPnt = searchQueue.shift();
+            this.#shipPlacement[currPnt[0]][currPnt[1]] = 0;
+            wreckage.push(currPnt);
+            for (let idx = 0; idx < 8; ++idx) {
+                const dx = currPnt[0] + disp[idx][0];
+                const dy = currPnt[1] + disp[idx][1];
+                if (Math.min(dx, dy) < 0 || Math.max(dx, dy) >= 10 || this.#shipPlacement[dx][dy] != -1) {
+                    continue;
+                }
+                searchQueue.push([dx, dy]);
+            }
+        }
+        const wreckagetSet = new Set(wreckage);
+        const borderSet    = new Set();
+        for (const sunkPoint of wreckagetSet) {
+            for (let idx = 0; idx < 8; ++idx) {
+                const dx = sunkPoint[0] + disp[idx][0];
+                const dy = sunkPoint[1] + disp[idx][1];
+                if (Math.min(dx, dy) < 0 || Math.max(dx, dy) >= 10) {
+                    continue;
+                }
+                if (wreckagetSet.has([dx, dy])) {
+                    /*
+                     *  Avoid marking the sunk ship as border;
+                     */
+                    continue;
+                }
+                borderSet.add([dx, dy]);
+            }
+        }
+        return borderSet;
     }
 
     /*

@@ -14,38 +14,43 @@ export default class GunnerStrategy extends NaiveStrategy {
 
     initStrategySpecific() {
         this.searchPoints = new Array();
-        this.visited = Array.from({ length: this.rows }, () => Array(this.cols).fill(false));
     }
 
-    execute() {
-        let attackCoord = [-1, -1];
+    getBestPointToAttack() {
+        let point = [-1, -1];
         if (this.searchPoints.length !== 0) {
             // We have coordinates of a knwon enemy vessel
-            attackCoord = this.searchPoints.shift();
+            point = this.searchPoints.shift();
         } else {
             while (this.coordinates.length > 0) {
-                attackCoord = this.coordinates.pop();
-                if (this.wasPointVisited(attackCoord) == false) {
+                point = this.coordinates.pop();
+                if (this.wasPointVisited(point) == false) {
                     // Skip all points that have been explored;
                     break;
                 }
             }
         }
-        this.visitCell(attackCoord);
-        const status = this.observableBoard.receiveAttack(attackCoord);
+        return point;
+    }
+
+    execute() {
+        const point = this.getBestPointToAttack();
+        this.visitCell(point);
+        const [status, border] = this.observableBoard.receiveAttack(point);
         switch (status) {
             case "Hit":
-                this.calibrateTargetingSystem(attackCoord);
+                this.calibrateTargetingSystem(point);
                 break;
             case "Sunk":
                 // The ship has been sunked, dispose of the search points
                 this.clearTargetingSystem();
+                this.adapt(border);
                 break;
             case "Miss":
                 // Nothing to do here
                 break;
         }
-        return attackCoord;
+        return [point, status];
     }
 
     calibrateTargetingSystem(attackCoord) {

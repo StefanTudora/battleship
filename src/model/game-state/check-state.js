@@ -8,7 +8,7 @@ class CheckState extends State {
         super(context);
     }
 
-    doAction() {
+    async doAction() {
         /*
          * Check if we have a winner and terminate game
          */

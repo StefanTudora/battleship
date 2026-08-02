@@ -5,12 +5,15 @@
     color: white;
 }
 
-.player-sel {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10rem;
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .player-sel {
@@ -21,6 +24,8 @@
         "button button";
     justify-content: center;
     align-items: center;
+    gap: 10rem;
+    animation: slideFadeIn 0.4s ease-out forwards;
 }
 
 .player-sel > p {

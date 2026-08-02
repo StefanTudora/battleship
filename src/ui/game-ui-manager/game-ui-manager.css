@@ -1,12 +1,34 @@
+.root-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10rem;
+}
 
 .game-view {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-areas: 
+        "first-player control second-player";
     justify-content: center;
     align-items: center;
     gap: 10rem;
     animation: slideFadeIn 0.4s ease-out forwards;
+} 
+
+game-view > div:first-of-type {
+    grid-area: first-player;
 }
+
+game-view > div:nth-of-type(2) {
+    grid-area: control;
+}
+
+game-view > div:last-of-type {
+    grid-area: second-player;
+}
+
 
 @keyframes slideFadeIn {
   0% {
@@ -23,12 +45,8 @@
     transition: 0.3s ease-in-out;
 }
 
-.red-bkg {
-    background-color: red;
-}
-
-.attackable > div:hover {
-    background-color: rgb(173, 173, 173);
+.attackable > div:not(.cell-hit):not(.cell-miss):not(.cell-sunk):not(.cell-border):hover {
+    background-color: rgb(97, 97, 97);
 }
 
 .zoom {
@@ -95,4 +113,38 @@
 .playerPresControl+.playerToggle div:last-child {
     color: white;
     transition: color 0.3s;
+}
+
+/*
+ * Board cell styles
+ */
+
+.cell-miss {
+    background-color: rgb(97, 97, 0)
+}
+
+.cell-border {
+    background-color: rgb(129, 129, 129);
+}
+
+.cell-hit {
+    background-color: red;
+}
+
+.cell-sunk {
+    background-color: rgb(83, 0, 0);
+}
+
+.root-view > button {
+    font-size: 4rem;
+    border-radius: 0.5rem;
+    background-color: #2e383f;
+    color: white;
+    transition: 0.3s;
+    animation: slideFadeIn 0.4s ease-out forwards;
+}
+
+.root-view  > button:hover {
+    scale: 1.1;
+    background-color: #f9a828;
 }

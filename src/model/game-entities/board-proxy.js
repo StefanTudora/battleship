@@ -23,7 +23,7 @@ class BoardProxy {
      * @point - to attack
      */
     receiveAttack(point) {
-        const pointState = this.#gameBoard.receiveAttack(point);
+        const [pointState, border] = this.#gameBoard.receiveAttack(point);
         switch (pointState) {
             // Sunk and Hit will update the board in the same manner
             case "Sunk":
@@ -34,7 +34,7 @@ class BoardProxy {
                 this.visibleBoard[point[0]][point[1]] = 'O';
                 break;
         }
-        return pointState;
+        return [pointState, border];
     }
 
     allShipsSunk() {

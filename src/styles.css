@@ -20,13 +20,13 @@ main {
     z-index: -1;
     inset: 0;
     filter: blur(5px);
-    transition: 0s;
 }
 
 #background > img {
     height: 100vh;
     width: 100vw;
     object-fit: cover;
+    transition: none !important;
     border: none;
 }
 
@@ -37,7 +37,7 @@ main {
     align-items: center;
 }
 
-#menu{
+#menu {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -46,7 +46,6 @@ main {
     height: 100%;
     padding: 2rem;
     box-sizing: border-box;
-
 }
 
 #op-sel {

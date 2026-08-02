@@ -1,6 +1,8 @@
 import TileBoardCreator from '../ship-placement-ui/ship-placement-ui.js';
 import './ship-pl-master.css';
 
+let playerNo = 1;
+
 /*
  *  Parent view of the board with controls
  */
@@ -64,7 +66,7 @@ const controlBoard = (advCallback) => {
 
     const getPlayerPresentation = () => {
         const msg       = document.createElement('p');
-        msg.textContent = 'Board configuration for Human';
+        msg.textContent = `Board configuration for Player ${playerNo ++}`;
         return msg;
     };
 

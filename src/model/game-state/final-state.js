@@ -6,10 +6,8 @@ class FinalState extends State {
         super(context);
     }
 
-    doAction() {
-        // Here make sure to display the winner and reset the game
-
-        // For dev purposeses, the final state displays only the winner
+     async doAction() {
+        this.context.resetCallback();
     }
 
 }

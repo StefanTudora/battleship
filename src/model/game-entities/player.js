@@ -10,9 +10,13 @@ class Player {
         return this.board.allShipsSunk();
     }
 
-    /** Meant to be overwritten */
+    /*
+     * Meant to be overwritten 
+     */
     attackBoard() {
-        // Intentionally left empty
+        /*
+         * Intentionally left empty
+         */
     }
 
     printBoard() {

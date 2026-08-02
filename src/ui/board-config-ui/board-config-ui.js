@@ -136,7 +136,7 @@ const boardConfig = (players, advCallback) => {
             /*
              *  Pass strategy to the CPU player type containing proxyBoard;
              */
-            playerModel = new PlayerClass(new StrategyClass(proxyBoard), proxyBoard);
+            playerModel = new PlayerClass(proxyBoard, new StrategyClass(proxyBoard));
         } else {
             /*
              *  Human player do not require proxy/strategy, they interact directly with the board;

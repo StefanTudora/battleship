@@ -10,7 +10,7 @@ class State {
     /*
      * Meant to be overwritten 
      */
-    doAction() {
+    async doAction() {
         throw new Error('Executed undefined action');
     }
 }
